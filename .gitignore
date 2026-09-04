@@ -1,0 +1,9 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# macOS
+.DS_Store
+
+# Lokale Claude-Code-Einstellungen (gehoeren an den Rechner, nicht ins Repo)
+.claude/settings.local.json
