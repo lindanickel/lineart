@@ -81,7 +81,8 @@ Gruppe).
 Zwei Stationen ohne Modifier dazwischen ergeben ein Bein mit `line.spacing`.
 Ein `Turn` dazwischen ergibt zwei Beine mit einem Knick.
 
-Der **Radius eines Turns ist hier schon Geometrie, nicht Optik**: über seine
+Der **Radius eines Turns ist hier schon Geometrie, nicht Optik** (und gilt für
+die Trassenmitte, siehe „Wessen Radius ist gemeint?" in Phase 4b): über seine
 Tangente `t = R · tan(δ/2)` belegt der Bogen Platz auf beiden Nachbarbeinen.
 Deshalb wird er beim Parsen aufgelöst und geht in Phase 3 als *untere
 Längenschranke* ein — eine Kurve kann ein Bein zu kurz machen, und das muss der
@@ -206,7 +207,17 @@ Bis hier gibt es nur Trassenmitten. Jetzt bekommt jede Linie ihre eigene Spur.
 - Die versetzte Polylinie wird auf **Gehrung** gesetzt: die parallel
   verschobenen Beine werden verlängert und geschnitten, damit die Spuren in der
   Kurve parallel bleiben.
-- Der Bogenradius wird um den Versatz korrigiert — innen enger, außen weiter.
+- Der Bogenradius gilt für die **innerste Spur des Bündels**: sie zeichnet ihn
+  unverändert, jede weiter außen liegende bekommt genau so viel mehr, wie sie
+  danebenliegt. Der Wert in der Definition ist damit eine **Untergrenze** —
+  enger wird keine Kurve gezeichnet, auch nicht im Bündel. Wer den Bogen allein
+  fährt, ist seine eigene innerste Spur und behält den Wert, auch wenn seine
+  Spur neben der Trassenmitte liegt. Zum Bündel zählt, wer den Knick mit
+  **gleichbleibendem Abstand** mitfährt; wer dort von einem Bündel ins andere
+  wechselt (S8 und S9 am Treptower Park), zählt nicht mit.
+  `Corridor(radius_from_centre=True)` schaltet auf die ältere Lesart zurück, in
+  der der Radius der Trassenmitte gehört — das benutzt nur der Ring.
+- Alte Lesart (nur noch dort): der Radius wird um den Versatz korrigiert — innen enger, außen weiter.
   Maßgeblich ist die **Mitte aus der Spur vor und hinter dem Knick**, nicht die
   davor: „davor" liegt für zwei gegenläufige Linien an entgegengesetzten Enden
   desselben Bogens. Wechselt das Bündel dort die Spur, nähme jede ihren Wert
@@ -221,6 +232,37 @@ Bis hier gibt es nur Trassenmitten. Jetzt bekommt jede Linie ihre eigene Spur.
   Park, von einem Bündel ins andere —, gibt es niemanden, zu dem sie
   konzentrisch sein müsste: sie behält den Default-Radius.
 
+#### Wessen Radius ist gemeint?
+
+Ein `Turn(radius=…)` und die `curve_radius_*` aus der Config gelten für die
+**Trassenmitte** — und die zeichnet oft keine einzige Linie. Was eine Linie
+tatsächlich zeichnet, ist Mitte ± Spurversatz (siehe oben), und über ein Bündel
+von vier Spuren liegen diese Werte gut eine Einheit auseinander. Der Wert, den
+man hinschreibt, ist also nicht der, den man auf der Karte nachmisst.
+
+Zwei Schreibweisen machen ihn nachprüfbar, beide im `Corridor` und beide nur
+für die Knicke **dieser Kante**:
+
+| | Bedeutung | wann |
+|---|---|---|
+| `radius_at={"S15": 0.8}` | die S15 zeichnet 0.8, alle anderen liegen konzentrisch dazu | der Normalfall: ein Bündel fährt gemeinsam durch den Bogen |
+| `radii={"S15": 0.8, "S25": 0.4}` | jede genannte Linie zeichnet genau ihren Wert, ohne Rücksicht aufeinander | Notausgang, wo Konzentrizität nicht definiert oder nicht gewollt ist |
+| `radius_from_centre=True` | ältere Lesart: der Radius gehört der Trassenmitte, die innere Spur fährt enger als er | Achsen, deren Form steht und sich durch die Regel nicht verschieben soll — die Ringbahn |
+
+`radius_at` rechnet aus dem Wert der Bezugslinie den der Mitte zurück; die
+übliche Versatzkorrektur macht daraus für jede andere Linie wieder ihren
+eigenen Radius. Sie gilt in diesem Fall **immer**, auch ohne Nachbarn im
+Bogen — ein ausdrücklich gesetzter Radius soll nicht davon abhängen, wer sonst
+gerade mitfährt.
+
+`radii` bricht die Konzentrizität bewusst: die Linien driften im Bogen
+auseinander. Das ist richtig, wo sie sich hinter ihm ohnehin trennen (S15 und
+S25 an der Perleberger Brücke wechseln dort beide die Spur, ein gemeinsamer
+Mittelpunkt existiert gar nicht) — und falsch überall sonst.
+
+Beide Felder ändern nur die Zeichnung. Die Trasse behält genau eine Geometrie,
+und damit bleibt jede Länge im Netz unberührt.
+
 ### Phase 5 — Zeichnen (`build_track_svg`)
 
 Erzeugt **keine Geometrie mehr**. Ein Layout lässt sich einmal lösen und mehrfach
@@ -230,9 +272,20 @@ verschieden rendern; an der Signatur ist das ablesbar, weil hier nur noch
 Gezeichnet wird in Schichten, in dieser Reihenfolge:
 
 1. die farbigen Linienzüge (innerhalb einer Familie die Stammlinie zuletzt,
-   damit sie obenauf liegt)
+   damit sie obenauf liegt). `draw_over` hebt einzelne Linien darüber
+   hinaus: im Bestand liegen S15 und S25 über ihrer Stammlinie, die S25
+   auch über der S26. Auf einer gemeinsamen Spur verdecken sie die untere
+   Linie dann ganz. In den Kreuzungsfenstern (Schicht 2) wird die Familie in
+   derselben Reihenfolge nachgezogen
 2. Ummantelungen an Kreuzungen ohne Umsteigebeziehung, damit erkennbar bleibt,
-   welche Linie oben läuft
+   welche Linie oben läuft. In jedem Fenster wird erst der weiße Rand der
+   oben liegenden Linie gezogen und dann ihre ganze **Familie** wieder
+   darübergelegt — die Schwesterlinie läuft unmittelbar daneben und
+   verschwände sonst unter dem Rand. Weil der Rand breiter ist als die
+   Linie, reicht er über den Fensterrand hinaus; die Schwestern werden
+   deshalb in einem um die halbe Randbreite größeren Fenster nachgezogen.
+   Ohne das schnitt am Westkreuz der Rand der S7 in die daneben in die Gabel
+   einlaufende S75
 3. Stationspunkte — einer **je Linie an deren Spur**, nicht einer auf der
    womöglich leeren Trassenmitte
 4. Hub-Pillen quer über das Bündel
@@ -329,7 +382,7 @@ VORGAENGER = bestand.NET
 
 NET = VORGAENGER.derive(
     stations=[*RESTYLED_STATIONS, *NEW_STATIONS],
-    lines={**CHANGED_LINES, "S26": REMOVE},
+    lines={**CHANGED_LINES, "S85_pankow": REMOVE},
     groups=GROUPS,
     corridors={**SIEMENSBAHN_CORRIDORS, ...},
     legend_at=(-60.0, None),

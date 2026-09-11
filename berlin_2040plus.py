@@ -26,9 +26,6 @@ den Suedring ab -- bis Koenigs Wusterhausen auf dem Weg der bisherigen S46.
 Die faehrt deshalb nicht mehr dorthin: an ihre Stelle tritt die bis Westend
 verlaengerte S47, die damit S46 heisst.
 
-Im Norden faellt dafuer eine Linie weg: die S86 entfaellt, ihren Ast von
-Pankow nach Buch faehrt jetzt die S85, die bisher in Pankow endete.
-
 Der BA3 der City-S-Bahn (Verlaengerung zum Gleisdreieck und zur
 Yorckstrasse, Cheruskerkurve) gehoert zeitlich ebenfalls hierher, ist aber
 noch nicht gezeichnet.
@@ -68,16 +65,6 @@ AUSSENRING_STATIONS: List[Station] = [
 ]
 
 AUSSENRING_CORRIDORS: Dict[str, Corridor] = {
-    # Wie im Bestand, nur heisst die Kante mit der Kurve jetzt
-    # Bucher Strasse -- Blankenburg. Schluessel wie dort, damit er den
-    # bisherigen Eintrag ersetzt.
-    "s8_pankow_bornholmer": replace(
-        VORGAENGER.corridors["s8_pankow_bornholmer"],
-        # Der geerbte Eintrag galt der S85, solange sie in Pankow ANFING --
-        # eine Startspur gilt nur fuer die erste Kante einer Linie. Sie
-        # faehrt jetzt aus Buch durch und braucht ihn nicht mehr.
-        start_offsets={},
-    ),
     "aussenring_zulauf_hohen_neuendorf": Corridor(
         # Die S75 muss neben der S1 liegen, wenn sie auf deren Trasse
         # einschwenkt. Der Versatz steht schon auf der Kante MIT der Kurve,
@@ -91,13 +78,6 @@ AUSSENRING_CORRIDORS: Dict[str, Corridor] = {
         # Zwischen Hohen Neuendorf und Birkenwerder faehrt jetzt die S75
         # statt der S8 -- auf derselben Spur.
         offsets={**VORGAENGER.corridors["nord_sued_s1"].offsets, "S75": 0.5},
-        # Anhalter Bahnhof -> Potsdamer Platz ist keine einzelne Kante mehr:
-        # `_TUNNEL_FORMEN` teilt die Versatz-Schraege dort am unbeschrifteten
-        # Wegpunkt `anhalter_potsdamer_schraege` (siehe `BA3_CORRIDORS`).
-        steps=insert_after(
-            VORGAENGER.corridors["nord_sued_s1"].steps,
-            "anhalter_bahnhof", "anhalter_potsdamer_schraege",
-        ),
     ),
     "stadtbahn_zulauf_messe_sued": bestand.NET.corridors[
         # Vor dem Westkreuz faehrt wieder die S3 statt der S75 -- damit gilt
@@ -199,25 +179,32 @@ _S75_GERADE: List[Step] = [
 # obwohl beide Nachbarkanten geradeaus fahrenden Linien gehoeren -- der S1
 # auf der Wannseebahn und den Ringlinien nach Suedkreuz.
 # ============================================================================
-# NORD-SUED-TUNNEL -- symmetrisch in den Potsdamer Platz
+# NORD-SUED-TUNNEL -- schnurgerade durch den Potsdamer Platz
 # ============================================================================
 #
-# Der Tunnel bekommt denselben Versatz wie der Ast vom Hauptbahnhof: ein
-# 45-Grad-Knick vor und einer hinter dem Brandenburger Tor, beide biegen
-# spiegelbildlich in Potsdamer Platz ein. Suedlich davon (zwischen Potsdamer
-# Platz und Anhalter Bahnhof) geht der Versatz mit zwei weiteren Knicken
-# wieder zurueck, damit sich an der Trasse ab Yorckstrasse nichts aendert.
+# Beide Trassen laufen hier ohne einen einzigen Knick durch: der alte
+# Tunnel von Anhalter Bahnhof bis Friedrichstrasse, und die City-S-Bahn vom
+# Hauptbahnhof bis Gleisdreieck. Zwei Geraden nebeneinander koennen sich
+# aber keinen Knoten teilen -- der Potsdamer Platz hat deshalb ZWEI: den
+# alten auf der Tunnelgeraden und `potsdamer_platz_city` auf der der
+# City-S-Bahn, eine halbe Trassenbreite (1.8) daneben. Gezeichnet wird
+# trotzdem ein Bahnhof: die Pille des alten Knotens spannt ueber beide
+# (`pill_with`), der zweite Knoten bleibt ohne eigenen Marker.
+#
+# Die Hoehen sind genau die der frueheren Schraegen-Fassung, damit sich an
+# Gleisdreieck, Anhalter Bahnhof und allem weiter suedlich nichts
+# verschiebt.
 
 
 # ============================================================================
 # STELLSCHRAUBEN -- Hauptbahnhof bis Schoeneberg
 # ============================================================================
-#   Stadtbahn ---- _AUSSEN_GERADE ---\
-#                                     \ Schraege (aus _STADTBAHN_HBF_FS)
-#                  _PP_GERADE --------/
-#   Potsdamer Platz
-#                  _ANHALTER_GERADE + _STADTBAHN_HBF_FS + _PP_GERADE (fest,
-#                  gleiche Hoehe wie Anhalter Bahnhof)
+#   Friedrichstrasse (Stadtbahn)
+#                  _FS_BRANDENBURGER
+#   Brandenburger Tor
+#                  _BRANDENBURGER_PP
+#   Potsdamer Platz          (der Ast vom Hauptbahnhof kommt hier schraeg an)
+#                  _PP_ANHALTER (fest, gleiche Hoehe wie Anhalter Bahnhof)
 #   Gleisdreieck --- elastisch (FlexPath), dann Turn(45), dann fix 1.2 ------
 #   Yorckstrasse (Grossgoerschenstrasse)
 #                  _YORCK_JLB
@@ -226,14 +213,21 @@ _S75_GERADE: List[Step] = [
 #   Schoeneberg (auf dem Ring, in der Hoehe fest)
 
 _STADTBAHN_HBF_FS = 1.8   # Breite des Knotens: Hauptbahnhof <-> Friedrichstrasse
-_AUSSEN_GERADE = 1.4      # Gerade von der Stadtbahn Richtung Süden alter Tunnel
-_PP_GERADE = 0.3          # Gerade am Potsdamer Platz, auf allen vier Aesten
 _ANHALTER_GERADE = 0.4    # Gerade an Gleisdreieck / Anhalter Bahnhof
 _DEHNUNG_YORCK = -0.3     # kommt auf allen drei Aesten oben drauf
 _YORCK_JLB = 1.0          # Yorckstrasse (Grossgoerschenstrasse) <-> Julius-Leber-Bruecke
+# Knick hinter Gleisdreieck <-> Yorckstrasse (Grossgoerschenstrasse)
+_YORCK_GD_ABSTAND = 1.0
+_ANHALTER_YORCK = 2.8     # Hoechstabstand Anhalter Bahnhof <-> Yorckstrasse
+# Der 135-Grad-Knick zwischen Wedding und Perleberger Bruecke. Der erste
+# Wert gehoert der Trassenmitte, die beiden anderen sind die Boegen, die S15
+# und S25 dort wirklich zeichnen (siehe `hbf_zulauf_wedding`).
+_WEDDING_RADIUS = 0.4     # Trassenmitte
+_WEDDING_RADIUS_S15 = 0.8 # aussen: weiter Bogen
+_WEDDING_RADIUS_S25 = 0.5 # innen: enger Bogen
 
 # Radius der Cheruskerkurve -- je spitzer (kleiner), desto knapper der Bogen.
-_CHERUSKER_RADIUS = 0.4
+_CHERUSKER_RADIUS = 0.5
 
 # Mindestabstand Julius-Leber-Bruecke <-> Schoeneberg: das erste Bein der
 # Cheruskerkurve (vor dem Turn) bekommt diese explizite Mindestlaenge, statt
@@ -246,31 +240,34 @@ _JLB_SCHOENEBERG_ABSTAND = 1.9
 # Verschiebung um _STADTBAHN_HBF_FS).
 _SCHRAEGE = _STADTBAHN_HBF_FS * 2 ** 0.5
 
-# Hoehe des Asts Hauptbahnhof -> Potsdamer Platz: Gerade + Schraege +
-# Gerade, aber als ein einziges Bein gezeichnet (keine Station noetig, an
-# der er knickt).
-_STADTBAHN_PP = _AUSSEN_GERADE + _STADTBAHN_HBF_FS + _PP_GERADE
+# Die Hoehen im alten Tunnel. Die Vorstufe hat die beiden kurzen Kanten am
+# Potsdamer Platz gedehnt, um dort Platz fuer die einfaedelnde S25 zu
+# schaffen; die faehrt hier ueber Gleisdreieck, der Tunnel geht deshalb
+# zurueck auf Bestandsmass (siehe `_TUNNEL_FORMEN`). Die Werte kommen direkt
+# aus dem Bestand bzw. der Vorstufe, damit sie nicht auseinanderlaufen.
+_FS_BRANDENBURGER = 2.4   # Friedrichstrasse <-> Brandenburger Tor
+_BRANDENBURGER_PP = bestand._BRANDENBURGER_PP
+_PP_ANHALTER = bestand._PP_ANHALTER
+
+# Hoehe des Asts Hauptbahnhof -> Potsdamer Platz (City), ein einziges
+# gerades Bein. Sie MUSS die Summe der beiden Tunnelkanten darueber sein:
+# Hauptbahnhof und Friedrichstrasse liegen auf derselben Hoehe (Stadtbahn),
+# also liegen auch die beiden Potsdamer Plaetze nur dann nebeneinander --
+# und nur dann deckt eine Pille beide sauber ab.
+_STADTBAHN_PP = _FS_BRANDENBURGER + _BRANDENBURGER_PP
 
 
 _TUNNEL_FORMEN = [
-    (["potsdamer_platz", FixPath(1.2), "brandenburger_tor",
-      FixPath(2.4), "friedrichstrasse"],
-     ["potsdamer_platz", FixPath(_PP_GERADE),
-      Turn(45), FixPath(_SCHRAEGE * 0.7),
-      "brandenburger_tor", FixPath(_SCHRAEGE * 0.3), Turn(-45),
-      FixPath(_AUSSEN_GERADE), "friedrichstrasse"]),
-    (["anhalter_bahnhof", FixPath(1.2), "potsdamer_platz"],
-     ["anhalter_bahnhof", FixPath(_ANHALTER_GERADE),
-      # Elastisch statt _SCHRAEGE fest: der S2-Zulauf (unten) zwingt Anhalter
-      # Bahnhof ohne eigene Kurve starr auf die x-Position von S2 -- diese
-      # Schraege gleicht die Differenz zur Nordschraege deshalb aus, statt
-      # exakt gleich lang zu sein.
-      Turn(-45), FixPath(_SCHRAEGE / 2),
-      # Unbeschrifteter Wegpunkt: eigene Kante fuer den Spurwechsel der S1
-      # im zweiten Knick statt schon am Anhalter Bahnhof.
-      "anhalter_potsdamer_schraege", FixPath(_SCHRAEGE / 2),
-      Turn(45), FixPath(_PP_GERADE),
-      "potsdamer_platz"]),
+    # Der alte Tunnel behaelt Form und Laengen des BESTANDS: von der
+    # Friedrichstrasse bis zum Anhalter Bahnhof eine einzige Gerade. Die
+    # Kante Friedrichstrasse <-> Brandenburger Tor kommt unveraendert
+    # durch; die beiden kurzen am Potsdamer Platz nimmt die Vorstufe laenger
+    # und werden hier zurueckgesetzt.
+    (["anhalter_bahnhof", FixPath(vorstufe._PP_ANHALTER), "potsdamer_platz"],
+     ["anhalter_bahnhof", FixPath(_PP_ANHALTER), "potsdamer_platz"]),
+    (["potsdamer_platz", FixPath(vorstufe._BRANDENBURGER_PP),
+      "brandenburger_tor"],
+     ["potsdamer_platz", FixPath(_BRANDENBURGER_PP), "brandenburger_tor"]),
     (["yorckstrasse_grossgoerschenstrasse", FixPath(1.15), Turn(-45),
       FixPath(0.6)],
      ["yorckstrasse_grossgoerschenstrasse",
@@ -293,19 +290,26 @@ _TUNNEL_FORMEN = [
 # Potsdamer Platz -> Yorckstrasse (Grossgoerschenstrasse) ueber Gleisdreieck,
 # gemeinsam fuer S6 und S15.
 _POTSDAMER_YORCK: List[Step] = [
-    # Dieselbe Hoehe wie Potsdamer Platz -> Anhalter Bahnhof (Suedschraege),
-    # damit Gleisdreieck auf gleicher Hoehe wie Anhalter Bahnhof liegt.
-    FixPath(_ANHALTER_GERADE + _STADTBAHN_HBF_FS + _PP_GERADE),
+    # Gerade weiter nach Sueden, dieselbe Hoehe wie Potsdamer Platz ->
+    # Anhalter Bahnhof im alten Tunnel: so liegt Gleisdreieck auf der Hoehe
+    # des Anhalter Bahnhofs.
+    FixPath(_PP_ANHALTER),
     "gleisdreieck",
     FlexPath(), Turn(45),
-    FixPath(1.4),
+    # So dicht an den Knick, wie es geht. Kuerzer als 1.0 beschneidet der
+    # Zeichner die Boegen: das Buendel wechselt in diesem Knick zugleich die
+    # Spur (von `potsdamer_platz_ast` auf `wannseebahn_s6`), und der Versatz
+    # verschiebt den Scheitel so weit auf das Bein, dass fuer die Tangente
+    # nichts mehr bleibt. Gemessen faellt die S15 bei 0.9 auf Radius 0.71,
+    # bei 0.6 auf eine scharfe Ecke.
+    FixPath(_YORCK_GD_ABSTAND),
     "yorckstrasse_grossgoerschenstrasse",
 ]
 
 # Geerbter (Vorstufen-)Weg der S15 ueber den Anhalter Bahnhof, zum Splicen
 # auf `_POTSDAMER_YORCK`.
 _S15_UEBER_ANHALTER: List[Step] = [
-    FixPath(1.2),
+    FixPath(vorstufe._PP_ANHALTER),
     "anhalter_bahnhof",
     FixPath(0.6), Turn(45), FixPath(1.15),
     "yorckstrasse_grossgoerschenstrasse",
@@ -315,7 +319,7 @@ _S15_UEBER_ANHALTER: List[Step] = [
 # auf `_YORCK_GLEISDREIECK`. Die S26 (unten) behaelt diesen Weg unveraendert.
 _S25_UEBER_ANHALTER: List[Step] = [
     "yorckstrasse", FixPath(1.4),
-    "anhalter_bahnhof", FixPath(1.2),
+    "anhalter_bahnhof", FixPath(vorstufe._PP_ANHALTER),
     "potsdamer_platz",
 ]
 
@@ -332,34 +336,28 @@ _S25_UEBER_ANHALTER: List[Step] = [
 # Richtungen schliessbar, sobald sich `_CHERUSKER_RADIUS` aendert.
 _YORCK_GLEISDREIECK: List[Step] = [
     "yorckstrasse",
-    FlexPath(), Turn(-45), FixPath(_SCHRAEGE), Turn(45),
+    # Beide Knicke mit dem Standardradius. Damit seine Tangente (0.33)
+    # zwischen ihnen unterkommt, braucht die Schraege ein Stueck Laenge --
+    # siehe `_ANHALTER_YORCK`.
+    FlexPath(), Turn(-45),
+    FixPath(_SCHRAEGE),
+    # Unbeschrifteter Wegpunkt im Scheitel des zweiten Knicks. Er teilt die
+    # Schraege in zwei Kanten, und nur deshalb kann die S25 GENAU in diesem
+    # Bogen von der halben auf die ganze Spur einschwenken: ein Spurwechsel
+    # wird in der Kurve uebernommen, die auf die neue Kante fuehrt.
+    "gleisdreieck_schraege",
+    # Ohne Laenge: der Knick sitzt genau auf dem Wegpunkt, die Schraege wird
+    # durch ihn nicht laenger. Der Radius steht hier ausgeschrieben, obwohl
+    # es der Standardwert ist: neben einem Bein der Laenge 0 rechnet der
+    # Loeser null Platz fuer die Tangente aus und deckelte den Bogen sonst
+    # auf eine scharfe Ecke. Ein ausdruecklich gesetzter Radius wird nicht
+    # gedeckelt -- und Platz ist in Wahrheit da, das Bein davor ist die
+    # ganze Schraege.
+    FixPath(0.0), Turn(45, radius=CFG.netz.curve_radius_45),
     FlexPath(),
     "gleisdreieck",
-    FixPath(_ANHALTER_GERADE + _STADTBAHN_HBF_FS + _PP_GERADE),
+    FixPath(_PP_ANHALTER),
     "potsdamer_platz",
-]
-
-# Ab Potsdamer Platz faehrt die S25 nicht mehr durch den Nord-Sued-Tunnel
-# (Brandenburger Tor, Friedrichstrasse, ...), sondern ueber den Ast zum
-# Hauptbahnhof und von dort ueber Perleberger Bruecke und Wedding zum
-# Gesundbrunnen -- derselbe Weg, den S15 vor der BA3-Verlaengerung nach
-# Gleisdreieck schon gefahren ist.
-_S25_DURCH_TUNNEL: List[Step] = [
-    "potsdamer_platz", FixPath(1.2),
-    "brandenburger_tor", FixPath(2.4),
-    "friedrichstrasse", FixPath(2.8),
-    "oranienburger_strasse", FixPath(1.4),
-    "nordbahnhof", FixPath(1.4),
-    "humboldthain", FixPath(2.4),
-    "gesundbrunnen",
-]
-_S25_UEBER_HAUPTBAHNHOF: List[Step] = [
-    "potsdamer_platz", FixPath(_STADTBAHN_PP),
-    *bestand._reversed(
-        bestand._slice(
-            VORGAENGER.lines["S15"].steps, "gesundbrunnen", "hauptbahnhof"
-        )
-    ),
 ]
 
 _BA3: List[Step] = [
@@ -380,29 +378,81 @@ _BA3: List[Step] = [
     ),
 ]
 
-# Abstand Priesterweg -- Suedkreuz (Bestand: 1.8) und Friedrichsfelde Ost --
+# Abstand Priesterweg -- Suedkreuz (Bestand: 2.0) und Friedrichsfelde Ost --
 # Springpfuhl (Bestand: 2.2), siehe die Begruendungen in `_FORMEN`.
-_PRIESTERWEG_SUEDKREUZ = 2.6
+_PRIESTERWEG_SUEDKREUZ = 2.4
 _FFO_SPRINGPFUHL = 1.6
 
 # Zwei Formaenderungen im Suedosten, fuer jede Linie an der Stelle und in
 # beiden Fahrtrichtungen (eine Kante muss ueberall dieselbe Form haben).
+# Die Nordbahn zwischen Wilhelmsruh und Hohen Neuendorf wird elastisch. In
+# allen Stufen davor liegt sie auf dem starren Standardabstand; hier geht das
+# nicht mehr auf, weil der Aussenring mit Bucher Strasse und Schoenlinder
+# Strasse und die Tangente ueber das Karower Kreuz eine weitere Schleife um
+# Hohen Neuendorf schliessen (ohne die Dehnung bleibt ein Restfehler von
+# 0.043 stehen). `group` koppelt die fuenf Abschnitte, sie bleiben also
+# untereinander gleich lang -- der Loeser waehlt nur, wie lang.
+#
+# Je Kante ein eigenes Paar statt eines Musters ueber die ganze Strecke: die
+# S15 endet in Frohnau und enthaelt das lange Muster deshalb gar nicht, die
+# S1 faehrt durch. Mit Einzelkanten trifft die Umformung beide.
+_NORDBAHN_STATIONEN = [
+    "wilhelmsruh", "wittenau", "waidmannslust", "hermsdorf", "frohnau",
+    "hohen_neuendorf",
+]
+_NORDBAHN_ELASTISCH = [
+    ([a, b], [a, FlexPath(group="nordbahn"), b])
+    for a, b in zip(_NORDBAHN_STATIONEN, _NORDBAHN_STATIONEN[1:])
+]
+
+# Die drei Stellschrauben suedlich davon. Sie legen fest, wie weit
+# Wilhelmsruh nach Norden rueckt -- und damit, was den fuenf gekoppelten
+# Abschnitten darueber noch bleibt. Ohne sie fallen die zu lang aus (1.55
+# statt 1.39) und die Nordbahn rutscht als Ganzes nach Sueden. Die Werte
+# gelten nur hier; bis zur Vorstufe hat die Nordbahn ueberall die Abstaende
+# des Bestands.
+_NORDBAHN_STELLSCHRAUBEN = [
+    (["bornholmer_strasse", FixPath(2.4), "wollankstrasse"],
+     ["bornholmer_strasse", FixPath(2.8), "wollankstrasse"]),
+    (["wollankstrasse", FixPath(1.0), "schoenholz"],
+     ["wollankstrasse", FixPath(1.2), "schoenholz"]),
+    (["schoenholz", FixPath(2.0), "wilhelmsruh"],
+     ["schoenholz", FixPath(2.2), "wilhelmsruh"]),
+    # Der Abzweig der S25 auf die Kremmener Bahn haengt an derselben Ecke.
+    (["schoenholz", FixPath(0.8), Turn(-45)],
+     ["schoenholz", FixPath(1.0), Turn(-45)]),
+]
+
 _FORMEN = [
+    *_NORDBAHN_ELASTISCH,
+    *_NORDBAHN_STELLSCHRAUBEN,
     *_TUNNEL_FORMEN,
     (["hauptbahnhof", FixPath(1.8), "friedrichstrasse"],
      ["hauptbahnhof", FixPath(_STADTBAHN_HBF_FS), "friedrichstrasse"]),
-    # Ast Hauptbahnhof -> Potsdamer Platz: derselbe Kartenradius (0.8) wie
-    # der Tunnel statt der bisherigen 1.2.
-    ([FlexPath(), Turn(-45), FlexPath(), Turn(45, radius=1.2),
-      FlexPath(preferred=1.0)],
+    # Ast Hauptbahnhof -> Potsdamer Platz (City): ein einziges gerades Bein
+    # statt der geerbten Schraege. Die Trasse laeuft vom Hauptbahnhof bis
+    # Gleisdreieck senkrecht durch, deshalb liegt ihr Potsdamer Platz
+    # westlich des alten.
+    ([FlexPath(), Turn(-45), FlexPath(), "hauptbahnhof_schraege",
+      FlexPath(), Turn(45)],
      [FixPath(_STADTBAHN_PP)]),
     # Anhalter Bahn: S2/S25 von Yorckstrasse in den Tunnel -- elastisch,
-    # damit sie sich an die Lage des Anhalter Bahnhofs anpasst.
+    # damit sie sich an die Lage des Anhalter Bahnhofs anpasst, aber nach
+    # oben gedeckelt: seit der Tunnel kuerzer ist, liegt der Anhalter
+    # Bahnhof weiter noerdlich, und ohne Deckel zoege die Kante die
+    # Yorckstrasse einfach mit nach unten.
     (["yorckstrasse", FixPath(1.4), "anhalter_bahnhof"],
-     ["yorckstrasse", FlexPath(), "anhalter_bahnhof"]),
+     ["yorckstrasse", FlexPath(max_length=_ANHALTER_YORCK), "anhalter_bahnhof"]),
     # Laengeres erstes Bein vor Baumschulenweg, Platz fuer alle vier Spuren.
     (bestand._KURVE_BAUMSCHULENWEG_NEUKOELLN,
      [FixPath(2.4), *bestand._KURVE_BAUMSCHULENWEG_NEUKOELLN[1:]]),
+    # Der 135-Grad-Knick zwischen Wedding und Perleberger Bruecke. Der
+    # Radius gehoert zur Trasse: S15 und S25 fahren denselben Bogen, der
+    # Spurversatz macht daraus zwei konzentrische Kurven. Ein eigener Wert je
+    # Linie ist nicht moeglich -- der Loeser weist zwei Geometrien auf einer
+    # gemeinsamen Kante ab.
+    (["wedding", FixPath(2.8), Turn(-135, radius=0.4)],
+     ["wedding", FixPath(2.8), Turn(-135, radius=_WEDDING_RADIUS)]),
     # Plaenterwald soll stehen bleiben -- die Dehnung faellt ganz auf das
     # Stueck nach Baumschulenweg.
     (bestand._KURVE_TREPTOW_PLAENTERWALD,
@@ -410,7 +460,7 @@ _FORMEN = [
     # Priesterweg rueckt von Suedkreuz ab: die Pille ist dort mit der S6 auf
     # vier Ringspuren gewachsen und reicht so weit nach Sueden, dass der
     # naechste Halt fast an ihr klebt.
-    (["priesterweg", FixPath(1.8), "suedkreuz"],
+    (["priesterweg", FixPath(bestand._PRIESTERWEG_SUEDKREUZ), "suedkreuz"],
      ["priesterweg", FixPath(_PRIESTERWEG_SUEDKREUZ), "suedkreuz"]),
     # Springpfuhl rueckt an Friedrichsfelde Ost heran. Die Ecke dahinter
     # liegt fest -- dort trifft die Wriezener Bahn auf die neue Gerade der
@@ -447,34 +497,30 @@ BA3_CORRIDORS: Dict[str, Corridor] = {
         steps=["yorckstrasse", "anhalter_bahnhof"],
         offsets={"S2": 1.0},
     ),
-    "potsdamer_platz_tunnel": Corridor(
-        # S1 bleibt bis zum Wegpunkt auf -0.5; S2 (und darueber die S26)
-        # weicht hier schon auf ihre Bestandsspur 0.5 aus, bevor sie am
-        # Wegpunkt zurueckschwenkt.
-        steps=["anhalter_bahnhof", "anhalter_potsdamer_schraege"],
-        offsets={"S1": -0.5, "S2": 0.5},
-    ),
-    "potsdamer_platz_tunnel_s1": Corridor(
-        steps=["anhalter_potsdamer_schraege", "potsdamer_platz"],
-        offsets={"S1": 0.0, "S2": 1.0},
-    ),
+    # Zwischen Anhalter Bahnhof und Friedrichstrasse steht keine eigene
+    # Spurvorgabe mehr: dort gilt durchgehend `nord_sued_s1` (S1 auf -0.5,
+    # S2 auf 0.5) -- beide Linien laufen also ohne Spurwechsel durch den
+    # Potsdamer Platz.
     "nord_sued_s1_gesundbrunnen": Corridor(
         # Ab Potsdamer Platz wieder die Bestandsspur, bis Gesundbrunnen.
-        # Die S25 faehrt hier nicht mehr mit (sie zweigt am Potsdamer Platz
-        # zum Hauptbahnhof ab) -- nur noch die S26 auf ihrer alten Trasse,
-        # die den Wert 0.5 automatisch ueber ihre Familie "S2" bekommt.
+        # Die S25 zweigt schon seit der Vorstufe zum Hauptbahnhof ab -- hier
+        # faehrt nur noch die S26 auf ihrer alten Trasse, die den Wert 0.5
+        # automatisch ueber ihre Familie "S2" bekommt.
         steps=["potsdamer_platz", "brandenburger_tor", "friedrichstrasse",
                "oranienburger_strasse", "nordbahnhof", "humboldthain",
                "gesundbrunnen"],
         offsets={"S1": -0.5, "S2": 0.5},
     ),
     "potsdamer_platz_ast": Corridor(
-        # Die S25 kommt hier neu dazu (von "yorckstrasse" ueber die neue
-        # Schraege) und liegt links von der S15, direkt daneben; die S6
-        # bleibt rechts auf ihrer alten Spur.
-        steps=["perlegerberger_bruecke", "hauptbahnhof", "potsdamer_platz",
+        # S25 aussen, daneben die S6 auf der Mitte, aussen die S15 -- die
+        # beiden haben gegenueber der Vorstufe die Plaetze getauscht. Der
+        # Tausch steht schon in den Zulaeufen von Wedding und Westhafen
+        # (`hbf_zulauf_*`), damit er nicht erst im Knick an der Perleberger
+        # Bruecke stattfindet: eine Spur wechselt immer erst in der naechsten
+        # Kurve, und dort waeren S6 und S15 sichtbar uebereinander gestiegen.
+        steps=["perlegerberger_bruecke", "hauptbahnhof", "potsdamer_platz_city",
                "gleisdreieck", "yorckstrasse_grossgoerschenstrasse"],
-        offsets={"S15": 0.0, "S25": -1.0, "S6": 1.0},
+        offsets={"S6": 0.0, "S25": -1.0, "S15": 1.0},
     ),
     # Die neue Schraege "yorckstrasse" -> Gleisdreieck hat sonst KEINEN
     # Korridor (die S25 faehrt dort allein) und bekommt deshalb automatisch
@@ -483,7 +529,15 @@ BA3_CORRIDORS: Dict[str, Corridor] = {
     # mehr liegt (alles eine gerade Strecke), wird `potsdamer_platz_ast`s
     # Wert dort nie uebernommen: die S25 muss ihre Spur schon hier bekommen.
     "yorckstrasse_gleisdreieck_zulauf": Corridor(
-        steps=["yorckstrasse", "gleisdreieck"],
+        # Auf der Schraege liegt die S25 noch auf der halben Spur ihrer
+        # Familie, wie suedlich der Yorckstrasse auch.
+        steps=["yorckstrasse", "gleisdreieck_schraege"],
+        offsets={"S25": 0.5},
+    ),
+    "gleisdreieck_zulauf_schraege": Corridor(
+        # Ab dem Scheitel des Knicks die ganze Spur: die S25 schwenkt im
+        # Bogen selbst ein und liegt am Gleisdreieck schon richtig.
+        steps=["gleisdreieck_schraege", "gleisdreieck"],
         offsets={"S25": 1.0},
     ),
     "wannseebahn_s6": Corridor(
@@ -515,33 +569,46 @@ BA3_CORRIDORS: Dict[str, Corridor] = {
         VORGAENGER.corridors["ring_zulauf_koellnische_heide"],
         offsets={"S4": -1.0, "S6": 1.0},
     ),
-    # Dasselbe Muster wie im 2030er Netz an genau dieser Kurve (dort S15 und
-    # S85, die S85-Rolle spielt hier die S25): S15 wechselt ihre Spur schon
-    # im Knick bei Wedding (2.0 -> 0.0, siehe `hbf_zulauf_wedding`), die S25
-    # bleibt dort unveraendert und wechselt stattdessen erst im Knick bei
-    # Perleberger Bruecke (siehe `hbf_zulauf_westhafen`/`potsdamer_platz_ast`,
-    # 1.0 -> -1.0). Jede Linie wechselt so an nur einer Kurve, nicht an beiden.
-    "ring": replace(
-        VORGAENGER.corridors["ring"],
-        offsets={**VORGAENGER.corridors["ring"].offsets, "S25": 1.0, "S15": -2.0},
-    ),
     "hbf_zulauf_wedding": replace(
         VORGAENGER.corridors["hbf_zulauf_wedding"],
-        offsets={"S15": 0.0, "S25": 1.0},
+        # Der 135-Grad-Knick liegt auf dieser Kante, und beide Linien
+        # WECHSELN genau in ihm die Spur -- die S15 von der Ringspur, die
+        # S25 von der des Hauptbahnhof-Astes. Konzentrisch ist dort nicht
+        # definiert (die beiden laufen vor und hinter dem Bogen verschieden
+        # weit auseinander), deshalb hier der Notausgang `radii` statt
+        # `radius_at`: jede Linie bekommt ihren Bogen ausgeschrieben. Hinter
+        # dem Bogen trennen sie sich ohnehin. Werte wie bei S15 und S85 an
+        # derselben Stelle im 2030er Netz.
+        radii={"S15": _WEDDING_RADIUS_S15, "S25": _WEDDING_RADIUS_S25},
+        # S15 neben der mittig laufenden S6, wie suedlich davon auch: so
+        # behaelt das Buendel vom Ring bis zum Gleisdreieck dieselbe
+        # Reihenfolge. Vorzeichen: S15 und S25 befahren diese Kante
+        # GEGENLAEUFIG (die eine nach Sueden, die andere nach Norden) --
+        # gleiches Vorzeichen hiesse deshalb dieselbe Seite. Damit sie
+        # links und rechts der S6 liegen, brauchen beide +1.0.
+        offsets={"S15": 1.0, "S25": 1.0},
     ),
     # Auf "perlegerberger_bruecke" -> "hauptbahnhof" gewinnt spaeter
     # `potsdamer_platz_ast` (S25 hier also ohne Wirkung); auf "westhafen" ->
-    # "perlegerberger_bruecke" gilt dieser Korridor aber wirklich -- S6 bekommt
-    # deshalb schon hier ihren Wert 1.0, sonst haelt der Wechsel bei
-    # Perleberger Bruecke nur zur Haelfte.
+    # "perlegerberger_bruecke" gilt dieser Korridor aber wirklich -- die S6
+    # bekommt deshalb schon hier ihren Wert 0.0 (seit dem Tausch mit der S15
+    # die Mitte), sonst haelt der Wechsel bei Perleberger Bruecke nur zur
+    # Haelfte.
     "hbf_zulauf_westhafen": replace(
         VORGAENGER.corridors["hbf_zulauf_westhafen"],
         offsets={**VORGAENGER.corridors["hbf_zulauf_westhafen"].offsets,
-                 "S6": 1.0, "S25": -1.0},
+                 "S6": 0.0, "S25": -1.0},
     ),
+    # Die Schraege der Vorstufe ist hier einer Geraden gewichen; der
+    # Korridor auf ihrem oberen Stueck entfaellt mit ihr (der Wegpunkt
+    # selbst weiter unten in `derive`).
+    "hbf_zulauf_schraege": REMOVE,
     "hbf_potsdamer_platz": replace(
         VORGAENGER.corridors["hbf_potsdamer_platz"],
-        offsets={**VORGAENGER.corridors["hbf_potsdamer_platz"].offsets, "S25": -1.0},
+        # Fuehrt jetzt zum eigenen Knoten der City-S-Bahn. S6 und S15 haben
+        # ihre Spuren getauscht (geerbt war S15 0.5, S6 1.5).
+        steps=["hauptbahnhof", "potsdamer_platz_city"],
+        offsets={"S6": 0.5, "S15": 1.5, "S25": -1.0},
     ),
     "goerlitzer_zulauf_spindlersfeld": replace(
         VORGAENGER.corridors["goerlitzer_zulauf_spindlersfeld"],
@@ -595,12 +662,6 @@ _BLANKENBURG_BUCH_NEU: List[Step] = [
     FixPath(1.8), "karow", FixPath(1.6), "buch",
 ]
 
-# Pankow -> Buch, der Nordast der bisherigen S86.
-_PANKOW_BUCH: List[Step] = [
-    *bestand._slice(bestand._STETTINER_BAHN, "pankow", "blankenburg"),
-    *_BLANKENBURG_BUCH_NEU[1:],
-]
-
 _S2_BLANKENBURG_BUCH = VORGAENGER.splice_line(
     "S2", _BLANKENBURG_BUCH_ALT, _BLANKENBURG_BUCH_NEU,
 )
@@ -627,18 +688,13 @@ CHANGED_LINES: Dict[str, TurnLine] = {
             _S2_BLANKENBURG_BUCH.steps, _SUEDKREUZ_YORCK_ALT, _SUEDKREUZ_YORCK_NEU
         ),
     ),
-    # Die S86 entfaellt. Ihren Nordast von Pankow nach Buch uebernimmt die
-    # S85, die bisher in Pankow endete -- eine Linie weniger fuer denselben
-    # Weg.
-    "S86": REMOVE,
-    "S85": replace(
-        VORGAENGER.lines["S85"],
-        start=225,                       # Buch -> Karow, nach Suedwesten
-        steps=[
-            *bestand._reversed(_PANKOW_BUCH)[:-1],
-            *VORGAENGER.lines["S85"].steps,
-        ],
-        direction="Buch -> Flughafen BER",
+    # Die S85 faehrt seit der Vorstufe von Buch herunter; auf diesem Stueck
+    # kommt hier nur das Karower Kreuz dazu. Sie befaehrt es von Norden,
+    # deshalb das gespiegelte Muster.
+    "S85": VORGAENGER.splice_line(
+        "S85",
+        bestand._reversed(_BLANKENBURG_BUCH_ALT),
+        bestand._reversed(_BLANKENBURG_BUCH_NEU),
     ),
     # Die neue Gerade der S75 laeuft von Gehrenseestrasse bis Bergfelde
     # durch und muss dabei sowohl das Karower Kreuz (starr an der S2) als
@@ -684,36 +740,22 @@ CHANGED_LINES: Dict[str, TurnLine] = {
         VORGAENGER.extend_line("S6", back=_BA3),
         direction="Gartenfeld -> Königs Wusterhausen",
     ),
-    # Die S25 wechselt vom Anhalter Bahnhof auf die Spur der S15/S6 ueber
-    # Gleisdreieck und faehrt ab Potsdamer Platz ueber Hauptbahnhof statt
-    # durch den Nord-Sued-Tunnel; die S26 (neu, direkt darunter) uebernimmt
-    # dafuer die alte Fassung unveraendert.
+    # Die S25 faehrt seit der Vorstufe ueber den Hauptbahnhof; hier wechselt
+    # sie im Sueden zusaetzlich vom Anhalter Bahnhof auf die Spur der S15/S6
+    # ueber Gleisdreieck. Die S26 behaelt den alten Weg durch den
+    # Nord-Sued-Tunnel und bekommt nur den kuerzeren Zulauf zur Yorckstrasse.
     "S25": replace(
         VORGAENGER.lines["S25"],
         steps=splice(
             splice(
-                splice(
-                    VORGAENGER.lines["S25"].steps,
-                    _SUEDKREUZ_YORCK_ALT, _SUEDKREUZ_YORCK_NEU,
-                ),
-                _S25_UEBER_ANHALTER, _YORCK_GLEISDREIECK,
-            ),
-            _S25_DURCH_TUNNEL, _S25_UEBER_HAUPTBAHNHOF,
-        ),
-    ),
-    # Neue Linie: der Weg der bisherigen S25 (Anhalter Bahnhof, alter
-    # Tunnel, Kremmener Bahn) -- deckt ab, was die S25 jetzt ueber
-    # Gleisdreieck umfaehrt. Im Norden endet sie schon in Hennigsdorf; auf
-    # dem Stueck darueber hinaus nach Velten bleibt die S25 allein.
-    "S26": replace(
-        VORGAENGER.lines["S25"],
-        steps=bestand._slice(
-            splice(
                 VORGAENGER.lines["S25"].steps,
                 _SUEDKREUZ_YORCK_ALT, _SUEDKREUZ_YORCK_NEU,
             ),
-            "stahnsdorf", "hennigsdorf",
+            _S25_UEBER_ANHALTER, _YORCK_GLEISDREIECK,
         ),
+    ),
+    "S26": VORGAENGER.splice_line(
+        "S26", _SUEDKREUZ_YORCK_ALT, _SUEDKREUZ_YORCK_NEU,
     ),
 }
 
@@ -723,11 +765,12 @@ CHANGED_LINES: Dict[str, TurnLine] = {
 # ============================================================================
 
 RESTYLED_STATIONS: List[Station] = [
-    VORGAENGER.station("blankenburg", kind="station"),
+    # Wie im Bestand einzeilig -- der Umbruch gilt nur in 2030 und 2030plus.
+    VORGAENGER.station("messe_nord_zob", label=None),
     # Endpunkt der S8 und Durchfahrt der S2 -- damit ein Umsteigepunkt.
-    # Beschriftung nach rechts, die Signetreihe darunter (siehe
-    # `badge_opposite_corner` unten): nordwestlich der Station stehen die
-    # Namen der neuen Aussenring-Halte, dort ist kein Platz mehr.
+    # Beschriftung nach rechts, die Signetreihe wie seit der 2030er Stufe
+    # darunter: nordwestlich der Station stehen die Namen der neuen
+    # Aussenring-Halte, dort ist kein Platz mehr.
     VORGAENGER.station("buch", kind="hub", label_pos="bottom_right"),
     # Nordwestlich stoesst die Beschriftung an Muehlenbeck-Moenchmuehle,
     # suedwestlich liegt jetzt die S8 mit ihren neuen Halten -- bleibt die
@@ -739,37 +782,54 @@ RESTYLED_STATIONS: List[Station] = [
         "gehrenseestrasse", "hohenschoenhausen", "wartenberg",
         "muehlenbeck_moenchmuehle", "schoenfliess", "bergfelde",
     )),
-    # An beiden Stellen laufen die Linien nur noch parallel nebeneinander --
-    # umsteigen muss hier niemand mehr, also ein gewoehnlicher Halt statt
-    # der Umsteigepille.
-    VORGAENGER.station("pankow", kind="station"),
-    VORGAENGER.station("gruenau", kind="station"),
 ]
+
+def _city_potsdamer(line: TurnLine) -> TurnLine:
+    """Setzt den Potsdamer Platz der City-S-Bahn ein.
+
+    S6, S15 und S25 halten dort auf ihrer eigenen Geraden, nicht auf der des
+    alten Tunnels -- fuer sie heisst der Bahnhof deshalb
+    `potsdamer_platz_city`. Jede der drei beruehrt ihn genau einmal (die S25
+    faehrt seit dieser Stufe nicht mehr durch den alten Tunnel), ein
+    einfaches Ersetzen genuegt also.
+    """
+    return replace(line, steps=[
+        "potsdamer_platz_city" if s == "potsdamer_platz" else s
+        for s in line.steps
+    ])
+
 
 # Neu und noch nicht gebaut: Klammern um den Namen, blasser Stationspunkt.
 # Die beiden Formaenderungen gelten fuer jede Linie, die die Stellen
 # befaehrt -- auch fuer die sonst unveraenderten.
 LINIEN: Dict[str, TurnLine] = {
-    lid: _umgeformt(line)
+    lid: (_city_potsdamer if lid in ("S6", "S15", "S25") else lambda l: l)(
+        _umgeformt(line)
+    )
     for lid, line in {**VORGAENGER.lines, **CHANGED_LINES}.items()
     # Die beiden gestrichenen Linien stehen unten in `derive`.
-    if lid not in ("S86", "S47")
+    if lid != "S47"
 }
 
 
 NEW_STATIONS: List[Station] = [
     planned(s) for s in (*AUSSENRING_STATIONS, *S75_STATIONS)
 ]
+# Der Potsdamer Platz der City-S-Bahn: eigener Knoten auf deren Geraden,
+# 1.8 westlich des alten. Ohne eigenen Marker und ohne Beschriftung -- beides
+# traegt der alte Knoten, dessen Pille ueber beide spannt (`pill_with`).
+NEW_STATIONS.append(
+    Station("potsdamer_platz_city", "Potsdamer Platz", label="",
+            hidden=True, pill_with="potsdamer_platz")
+)
+# Reiner Korridor-Wegpunkt im Knick der S25-Schraege, siehe
+# `_YORCK_GLEISDREIECK`: ohne Punkt, ohne Namen.
+NEW_STATIONS.append(
+    Station("gleisdreieck_schraege", "Gleisdreieck-Schraege", label="",
+            hidden=True)
+)
 # Gleisdreieck steht schon im Bestand, faehrt aber erst der BA3 an.
 NEW_STATIONS.append(planned(VORGAENGER.stations["gleisdreieck"]))
-# Reiner Korridor-Wegpunkt ohne Beschriftung, siehe `_TUNNEL_FORMEN` und
-# `BA3_CORRIDORS`: teilt die Versatz-Schraege Anhalter Bahnhof -> Potsdamer
-# Platz in zwei Kanten, damit die S1 dort erst am zweiten Knick statt gleich
-# am ersten die Spur wechselt.
-NEW_STATIONS.append(
-    Station("anhalter_potsdamer_schraege", "Anhalter-Potsdamer-Schraege",
-            label="", hidden=True)
-)
 
 
 # ============================================================================
@@ -790,7 +850,7 @@ GROUPS["S75"] = [
     TrainGroup("Stammzuggruppe", "Birkenwerder <> Charlottenburg", 4,
                hollow=2, note="Bucher Straße <> Hohen Neuendorf",
                note_cars=2),
-    TrainGroup("Tageszuggruppe", "Wartenberg <> Warschauer Straße", 2),
+    TrainGroup("Tageszuggruppe", "Wartenberg <> Ostbahnhof", 2),
 ]
 # ... und faehrt dafuer wieder bis Spandau.
 GROUPS["S3"] = [
@@ -798,57 +858,68 @@ GROUPS["S3"] = [
     TrainGroup("Tageszuggruppe", "Erkner <> Charlottenburg", 4),
     TrainGroup("HVZ-Verstärker", "Friedrichshagen <> Ostbahnhof", 2),
 ]
-# Beginnt jetzt am Karower Kreuz bzw. in Buch. Die Fussnote aus dem Bestand
+# Beginnt jetzt am Karower Kreuz bzw. in Buch. Die Fussnote aus der Vorstufe
 # faellt hier weg: der schwaechere Abschnitt lag auf der Nordbahn, und die
-# faehrt jetzt die S75 -- dort steht die Fussnote nun auch.
-GROUPS["S8"] = [TrainGroup("Stammzuggruppe", "Wildau <> Buch", 3)]
+# faehrt jetzt die S75 -- dort steht die Fussnote nun auch. Damit faehrt die
+# S8 auf ihrer ganzen Laenge den Vollzug, den sie seit der Vorstufe hat.
+GROUPS["S8"] = [TrainGroup("Stammzuggruppe", "Wildau <> Buch", 4)]
 # Aus der verlaengerten S47 geworden, die alte S46 entfaellt.
 GROUPS["S46"] = [TrainGroup("Stammzuggruppe", "Spindlersfeld <> Westend", 3)]
 del GROUPS["S47"]
-# Die S86 entfaellt; ihren Nordast faehrt jetzt die S85.
-GROUPS["S85"] = [TrainGroup("Stammzuggruppe", "Flughafen BER <> Buch", 3)]
-del GROUPS["S86"]
 # Faehrt mit dem BA3 durch bis Koenigs Wusterhausen.
 GROUPS["S6"] = [
     TrainGroup("Stammzuggruppe", "Gartenfeld <> Königs Wusterhausen", 4),
     TrainGroup("Tageszuggruppe", "Gartenfeld <> Grünau", 4),
 ]
-# Die beiden Zuggruppen der bisherigen S25 werden zu je einer Linie: die
-# S25 faehrt als Stammzuggruppe durch bis Velten, die neue S26 als
-# Tageszuggruppe nur bis Hennigsdorf -- so weit reicht auch ihr Laufweg auf
-# der Karte.
-GROUPS["S25"] = [TrainGroup("Stammzuggruppe", "Stahnsdorf <> Velten", 3)]
-GROUPS["S26"] = [TrainGroup("Tageszuggruppe", "Stahnsdorf <> Hennigsdorf", 3)]
-
 
 NET = VORGAENGER.derive(
-    stations=[*RESTYLED_STATIONS, *NEW_STATIONS],
-    lines={**LINIEN, "S86": REMOVE, "S47": REMOVE},
-    colors={"S26": bestand.LINE_COLORS["S25"]},
+    stations={
+        **{st.id: st for st in (*RESTYLED_STATIONS, *NEW_STATIONS)},
+        # Der Wegpunkt in der Schraege der Vorstufe -- die gibt es hier nicht
+        # mehr, siehe `_FORMEN`.
+        "hauptbahnhof_schraege": REMOVE,
+    },
+    lines={**LINIEN, "S47": REMOVE},
     groups=GROUPS,
     corridors={**AUSSENRING_CORRIDORS, **BA3_CORRIDORS},
+    # Die S85 faehrt von Pankow durch bis Buch -- ohne Tag braucht der Name
+    # dort auch keinen Versatz mehr. Julius-Leber-Bruecke steht mit der S6
+    # und der gedehnten Kante nach Yorckstrasse anders; dort bleibt der
+    # Name auf seiner Standardstelle.
+    label_offsets={"pankow": REMOVE, "julius_leber_bruecke": REMOVE},
     badge_offsets={
         # Das S8-Signet sitzt unter dem Namen, muss dort aber nach rechts
         # ausweichen: unter dem Kreuz laufen S2 und S8 als Paar, dazu die S75
         # diagonal durch -- an der Standardstelle liegt es auf der S75.
         "karower_kreuz": (14.0, 0.0),
     },
-    # Buch traegt seine Signete jetzt wieder ganz normal unter dem Namen --
-    # der steht rechts der Station, und dort ist darunter Platz. Auf der
-    # Gegenecke (aus der Vorstufe geerbt) laeuft in dieser Stufe die
-    # Beschriftung der neuen Aussenring-Halte durch.
-    badge_opposite_corner={
-        "buch": REMOVE,
-        # Hennigsdorf ist mit der S26 zum Endbahnhof geworden. Sein Name
-        # steht unten links (aus der Vorstufe), dort laeuft die Strecke aber
-        # weiter nach Velten -- das Signet geht deshalb auf die Gegenecke
-        # nach oben rechts, waehrend der Name bleibt, wo er ist.
-        "hennigsdorf": True,
+    # Zwei Beschriftungen von Hand, gemessen ab der Stationsmitte (x nach
+    # rechts, y nach unten). Beide Stellen sind Sonderfaelle, an denen die
+    # automatische Lage nichts Besseres finden kann.
+    label_override={
+        # Karower Kreuz liegt in einem Andreaskreuz: die Stettiner Bahn von
+        # Suedwest nach Nordost, die Gerade der S75 von Nordwest nach
+        # Suedost. Der Name steht im oestlichen Zwickel, dicht hinter der
+        # hellgruenen S8 (die reicht auf dieser Hoehe bis 16) und mit der
+        # MITTE der Zeile auf Stationshoehe -- daher die 7 statt 3.5, die
+        # Grundlinie liegt eine halbe Versalhoehe tiefer.
+        "karower_kreuz": (18.5, 7.0, "start"),
+        # Zwei Zeilen ueber dem Knick, und darunter folgt gleich
+        # "Julius-Leber-Bruecke". Weiter nach oben und nach rechts, damit
+        # zwischen den beiden Bloecken Luft bleibt.
+        "yorckstrasse_grossgoerschenstrasse": (-6.0, -20.0, "end"),
     },
     # Die beiden Linien der City-S-Bahn kreuzen den Suedosten als
     # durchgehendes Paar -- sie bleiben dabei sichtbar oben, statt unter
     # jeder einzelnen Diagonalen zu verschwinden.
-    crossing_over={"S6": ("S8", "S9", "S85"), "S46": ("S8", "S9", "S85")},
+    crossing_over={
+        # Die S6 liegt oben, wo sie andere Linien kreuzt: im Suedosten die
+        # Diagonalen von S8/S85 und S9, bei Westhafen die S15, mit der sie
+        # dort die Plaetze tauscht. Sie faehrt in beiden Faellen ueber die
+        # andere hinweg und bekommt deshalb dort den weissen Rand.
+        "S6": ("S1", "S8", "S9", "S85"),
+        "S46": ("S8", "S9", "S85"),
+    },
     # Nur die linke Kante ist gesetzt; die Hoehe rechnet der Renderer aus
     # (siehe `legend_at` in `Net`): die Tabelle haengt so tief, dass unter
     # ihr genau so viel Luft bleibt wie ueber und neben ihr.

@@ -218,6 +218,7 @@ def build_track_svg(
     badge_above: Iterable[str] = (),
     badge_order: Optional[Mapping[str, Sequence[str]]] = None,
     crossing_over: Optional[Mapping[str, Sequence[str]]] = None,
+    draw_over: Optional[Mapping[str, Sequence[str]]] = None,
 ) -> str:
     """Phase 5 (Darstellung): zeichnet ein fertig geloestes `LayoutResult`.
 
@@ -332,10 +333,37 @@ def build_track_svg(
     # Buendel-Versatz) in Linienfarbe, oben drauf.
     # Innerhalb einer Familie die Stammlinie ZULETZT zeichnen, damit auf
     # gemeinsamen Abschnitten ihre Farbe sichtbar bleibt und nicht die der
-    # darueber liegenden Variante.
+    # darueber liegenden Variante. `draw_over` hebt einzelne Linien darueber
+    # hinaus: jede dort genannte Linie liegt ueber allen, die sie aufzaehlt
+    # -- auch ueber ihrer Stammlinie, deren Farbe sie auf einer gemeinsamen
+    # Spur dann verdeckt. Linien, die es in dieser Karte nicht gibt, zaehlen
+    # nicht; so kann eine spaetere Stufe den Eintrag erben, auch wenn eine
+    # der genannten Linien dort wegfaellt.
+    ebene: Dict[str, int] = {
+        lid: 1 if line_layout.families.get(lid, lid) == lid else 0
+        for lid in highlights
+    }
+    for _ in range(len(ebene) + 1):
+        angehoben = False
+        for lid, unter in (draw_over or {}).items():
+            if lid not in ebene:
+                continue
+            ziel = max((ebene[u] + 1 for u in unter if u in ebene),
+                       default=ebene[lid])
+            if ziel > ebene[lid]:
+                ebene[lid] = ziel
+                angehoben = True
+        if not angehoben:
+            break
+    else:
+        raise ValueError("draw_over ist zirkulaer: "
+                         + ", ".join(sorted(draw_over or {})))
+
+    def stapel(lid: str) -> Tuple[int, str]:
+        return (ebene[lid], lid)
+
     def draw_order(item: Tuple[str, str]) -> Tuple[int, str]:
-        lid = item[0]
-        return (1 if line_layout.families.get(lid, lid) == lid else 0, lid)
+        return stapel(item[0])
 
     path_d_by_line: Dict[str, str] = {}
     flat_paths: Dict[str, List[Pt]] = {}
@@ -373,6 +401,13 @@ def build_track_svg(
     for station_id, station in stations.items():
         if station.kind != "hub":
             continue
+        # Ein Bahnhof kann auf zwei Trassen liegen, die sich nicht treffen
+        # (Potsdamer Platz: alter Tunnel und City-S-Bahn laufen gerade
+        # aneinander vorbei). Dann hat er zwei Knoten, und der zweite meldet
+        # sich ueber `pill_with` bei diesem an -- eine Pille ueber beide.
+        knoten = [station_id] + [
+            sid for sid, st in stations.items() if st.pill_with == station_id
+        ]
         # Beide Lagen jeder Linie: wo sie ankommt und -- falls sie hier die
         # Spur wechselt -- wo sie wieder abfaehrt.
         punkte = [
@@ -380,7 +415,8 @@ def build_track_svg(
             for line_id in highlights
             for quelle in (line_layout.paths[line_id].stations,
                            line_layout.paths[line_id].lane_changes)
-            for lage in ([quelle[station_id]] if station_id in quelle else [])
+            for sid in knoten
+            for lage in ([quelle[sid]] if sid in quelle else [])
         ]
         if not punkte:
             continue
@@ -789,25 +825,52 @@ def build_track_svg(
         return [st for st in stuecke if len(st) > 1]
 
     if windows:
-        reihenfolge = sorted(windows)
-        # Erst ALLE weissen Raender, dann alle Farben -- sonst radiert der
-        # Rand der einen Linie die Farbe einer anderen wieder weg.
-        for schicht in ("weiss", "farbe"):
-            for lid in reihenfolge:
+        # Reihenfolge: wer anderswo selbst UNTEN liegt, kommt zuerst dran.
+        # Sonst malt seine eigene Farbe -- die im Fenster ueber den ganzen
+        # Familienstrang neu gezogen wird -- den weissen Rand dessen wieder
+        # zu, der ueber ihm liegt. Bei Westhafen ist das die S15: sie
+        # ueberquert dort den Ring, wird ihrerseits aber von der S6
+        # ueberfahren.
+        ueberfahren: Dict[str, int] = defaultdict(int)
+        for _, _, unter in crossings:
+            ueberfahren[line_layout.families.get(unter, unter)] += 1
+        reihenfolge = sorted(
+            windows,
+            key=lambda lid: (
+                -ueberfahren[line_layout.families.get(lid, lid)], lid
+            ),
+        )
+        # Je Fenster erst der weisse Rand, dann die Farbe darauf.
+        for lid in reihenfolge:
+            for schicht in ("weiss", "farbe"):
                 familie = line_layout.families.get(lid, lid)
                 # Nicht nur die kreuzende Linie selbst, sondern ihre ganze
                 # Familie: die Schwesterlinie laeuft unmittelbar daneben und
-                # wuerde sonst vom eigenen weissen Rand mit abgedeckt.
+                # wuerde sonst vom eigenen weissen Rand mit abgedeckt. In
+                # derselben Reihenfolge wie oben, sonst laege im Fenster eine
+                # andere Linie oben als auf der Strecke davor und danach.
                 linien = ([lid] if schicht == "weiss" else
-                          [a for a in sorted(highlights)
-                           if line_layout.families.get(a, a) == familie])
+                          sorted((a for a in highlights
+                                  if line_layout.families.get(a, a) == familie),
+                                 key=stapel))
                 for andere in linien:
                     farbe = ("white" if schicht == "weiss"
                              else highlights[andere])
                     breite = (style.highlight_line_width + 2 * style.crossing_casing
                               if schicht == "weiss" else style.highlight_line_width)
+                    # Der weisse Rand ist breiter als die Linie und reicht
+                    # deshalb ueber den Fensterrand hinaus -- an einer Gabel
+                    # trifft er dort die Schwesterlinie, deren eigener
+                    # Verlauf schon ausserhalb liegt (Westkreuz: der Rand
+                    # der S7 schnitt in die S75). Fuer die Schwestern wird
+                    # das Fenster deshalb um die halbe Randbreite groesser
+                    # genommen; sie werden dann ueber ihn gelegt.
+                    ueberstand = (0.0 if andere == lid else
+                                  style.highlight_line_width / 2
+                                  + style.crossing_casing)
                     for pkt, radius in windows[lid]:
-                        for stueck in fenster_stuecke(andere, pkt, radius):
+                        for stueck in fenster_stuecke(andere, pkt,
+                                                      radius + ueberstand):
                             # Stumpfe Enden: das Teilstueck hoert genau am
                             # Fensterrand auf, wie es die Beschneidung vorher
                             # auch getan hat. Runde Enden wuerden es um einen
@@ -1243,9 +1306,16 @@ def build_track_svg(
         versatz = (len(label_lines) - 1) * style.label_font * 1.15
         punkte = station_points.get(station_id, ())
 
-        if (
+        ddx = ddy = 0.0
+        if station_id in labels:
+            # `label_override`: die Lage steht von Hand fest, gemessen ab der
+            # STATIONSMITTE. Die automatische Verschiebung nach aussen (um
+            # die Buendelbreite, den Markerabstand und die Zeilenzahl) bleibt
+            # deshalb ganz aus -- sonst addierte sich der von Hand gesetzte
+            # Wert auf eine Lage, die man nicht sieht.
+            pass
+        elif (
             stations[station_id].kind == "hub"
-            and station_id not in labels
             and abs(ax) > 0.3
             and abs(ay) > 0.3
         ):
@@ -1334,34 +1404,6 @@ def build_track_svg(
                 )
 
             text = "".join(tspan(i, line) for i, line in enumerate(label_lines))
-
-        # Der Abstand wird auf Hoehe der Grundlinie gemessen -- eine schraege
-        # Trasse steht eine Zeilenhoehe weiter oben aber noch woanders und
-        # kann dort mitten im Textkasten liegen (Karower Kreuz). Zum Schluss
-        # wird deshalb der Kasten selbst gegen die Linien geprueft und, falls
-        # noetig, nach aussen geschoben -- hoechstens um eine Spurbreite,
-        # danach hilft nur eine andere Lage.
-        if abs(ax) > 0.3:
-            sx_ = 1.0 if ax > 0 else -1.0
-            breite_l = label_width(
-                label, style.label_font, style.label_suffix_smaller
-            )
-            nah_ = [
-                (a, b) for a, b in segments
-                if min(hypot(a[0] - x, a[1] - y), hypot(b[0] - x, b[1] - y)) < 120.0
-            ]
-            for schub in range(0, 13):
-                lx_ = x + dx + sx_ * schub
-                kx0 = (lx_ - breite_l / 2 if anchor == "middle"
-                       else lx_ - breite_l if anchor == "end" else lx_)
-                kasten_l = (
-                    kx0, y + dy - 0.75 * style.label_font,
-                    kx0 + breite_l, y + dy + versatz + 0.25 * style.label_font,
-                )
-                if not any(_segment_hits_box(a, b, kasten_l, half_line)
-                           for a, b in nah_):
-                    dx += sx_ * schub
-                    break
 
         # Ausdehnung des Textblocks: Breite aus der Schaetzung, Hoehe aus
         # Zeilenzahl und Grundlinie. Die waagerechte Lage haengt am

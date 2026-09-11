@@ -123,8 +123,7 @@ STATIONS: Dict[str, Station] = _station_registry([
     Station("marienfelde", "Marienfelde", label_pos="top_right"),
     Station("marzahn", "Marzahn"),
     Station("mehrower_allee", "Mehrower Allee"),
-    Station("messe_nord_zob", "Messe Nord/ZOB", label="Messe Nord/\nZOB",
-            label_pos="left"),
+    Station("messe_nord_zob", "Messe Nord/ZOB", label_pos="left"),
     Station("messe_sued", "Messe Süd (Eichkamp)", label="Messe Süd\n(Eichkamp)"),
     Station("mexikoplatz", "Mexikoplatz", label_pos="bottom"),
     Station("muehlenbeck_moenchmuehle", "Mühlenbeck-Mönchmühle", label="Mühlenbeck-\nMönchmühle", label_pos="top_right"),
@@ -163,8 +162,12 @@ STATIONS: Dict[str, Station] = _station_registry([
     Station("schoenefeld", "Schönefeld", label_pos="top_left"),
     Station("schoeneweide", "Schöneweide", kind="hub"),
     Station("schoenfliess", "Schönfließ", label_pos="top_right"),
-    Station("schoenhauser_allee", "Schönhauser Allee", label="Schönhauser\nAllee", kind="hub", label_pos="bottom"),
-    Station("schoenholz", "Schönholz", kind="hub"),
+    # Keine Umsteigepille: an beiden Stellen laufen die Linien nur
+    # nebeneinander her -- an der Schoenhauser Allee S8/S85 laengs des Rings,
+    # in Schoenholz die Nordbahn-Familien S1 und S2. Umsteigen muss dort
+    # niemand.
+    Station("schoenhauser_allee", "Schönhauser Allee", label="Schönhauser\nAllee", label_pos="bottom"),
+    Station("schoenholz", "Schönholz"),
     Station("sonnenallee", "Sonnenallee", label_pos="left"),
     Station("spandau", "Spandau", label_pos="left", kind="hub"),
     Station("spindlersfeld", "Spindlersfeld", label_pos="right"),
@@ -229,6 +232,15 @@ LINE_COLORS: Dict[str, str] = {
     "S42": "#CB6418",
     "S46": "#CD9C53",
     "S47": "#CD9C53",
+}
+
+# Zeichenreihenfolge: S15 und S25 liegen immer oben -- ueber ihrer
+# Stammlinie und die S25 auch ueber der S26. Solange sie deren Farbe
+# tragen, sieht man davon nichts; bekommen sie eine eigene, zeigt eine
+# gemeinsame Spur die ihre.
+DRAW_OVER: Dict[str, Sequence[str]] = {
+    "S15": ("S1",),
+    "S25": ("S2", "S26"),
 }
 
 def _slice(corridor: Sequence[Step], start_name: str, end_name: str) -> List[Step]:
@@ -319,11 +331,18 @@ _STADTBAHN: List[Step] = [
     "ostkreuz",
 ]
 
+# Die beiden kurzen Kanten um den Potsdamer Platz. Spaetere Stufen schreiben
+# sie mehrfach aus -- fuer Splice-Muster und fuer den Ast der City-S-Bahn --
+# und muessen dabei denselben Wert treffen, sonst haette dieselbe Kante in
+# zwei Linien verschiedene Laengen. Deshalb stehen sie hier mit Namen.
+_PP_ANHALTER = 1.2        # Potsdamer Platz <-> Anhalter Bahnhof
+_BRANDENBURGER_PP = 1.2   # Brandenburger Tor <-> Potsdamer Platz
+
 _NORD_SUED_TUNNEL: List[Step] = [
     "anhalter_bahnhof",
-    FixPath(1.2),
+    FixPath(_PP_ANHALTER),
     "potsdamer_platz",
-    FixPath(1.2),
+    FixPath(_BRANDENBURGER_PP),
     "brandenburger_tor",
     FixPath(2.4),
     "friedrichstrasse",
@@ -380,6 +399,12 @@ _RING: List[Step] = [
     "gesundbrunnen", FlexPath(),
 ]
 
+# Suedende <-> Priesterweg <-> Suedkreuz. Priesterweg liegt zwischen zwei
+# Nachbarn, die beide breit bauen: der Ring traegt hier mehrere Spuren, und
+# die Pille von Suedkreuz reicht entsprechend weit nach Sueden. Auf dem
+# Standardabstand klebt der Halt fast an ihr, darum etwas mehr Luft.
+_PRIESTERWEG_SUEDKREUZ = 2.0
+
 _ANHALTER_BAHN: List[Step] = [
     "teltow_stadt",
     "lichterfelde_sued",
@@ -389,7 +414,7 @@ _ANHALTER_BAHN: List[Step] = [
     "suedende",
     FixPath(1.8),
     "priesterweg",
-    FixPath(1.8),
+    FixPath(_PRIESTERWEG_SUEDKREUZ),
     "suedkreuz",
     FlexPath(min_length=2.4),
     "yorckstrasse",
@@ -583,26 +608,24 @@ _KURVE_GRUNEWALD_WESTKREUZ: List[Step] = [FlexPath(), Turn(45), FixPath(2.2)]
 
 # Stadtbahn -> Ost-/Wriezener Bahn (S5, S7, S75)
 #
-# Weiter gefasst als der Default-Radius, weil hier ZWEI Spuren nebeneinander
-# durch die Kurve gehen: S5 aussen, S7/S75 innen. Die innere Spur bekommt
-# durch die konzentrische Korrektur den kleineren Radius, und mit dem Default
-# 0.8 bliebe ihr davon fast nichts (0.8 - 1.5 Spurbreiten = 0.16) -- die
-# Kurve knickte dort praktisch. Der groessere Grundradius gibt beiden Spuren
-# einen sichtbaren Bogen.
-_R_OSTKREUZ = 1.2
+# Der Default-Radius, ohne Aufschlag: hier gehen zwar zwei Spuren
+# nebeneinander durch die Kurve (S5 aussen, S7/S75 innen), aber der Radius
+# gilt fuer die INNERSTE Spur des Buendels -- die faehrt ihn also
+# unveraendert, und die S5 aussen bekommt eine Spurbreite mehr. Frueher
+# stand hier ein groesserer Grundradius, weil damals die Trassenmitte
+# gemeint war und der inneren Spur davon fast nichts blieb.
 _KURVE_OSTKREUZ_NOELDNERPLATZ: List[Step] = [
-    FixPath(1.8), Turn(-45, radius=_R_OSTKREUZ), FixPath(2.0),
+    FixPath(1.8), Turn(-45), FixPath(2.0),
 ]
 
 # Stadtbahn -> Schlesische Bahn (S3)
 #
-# Die S3 faehrt diese Kurve allein und bekaeme deshalb den Default-Radius --
-# neben der weiter gefassten Gegenkurve saehe sie zu eng aus. Hier steht
-# darum von Hand genau der Radius, den die S5 als aeussere Spur ihres Paares
-# faehrt: eine halbe Spurbreite enger als _R_OSTKREUZ, weil die S5 auf der
-# Stadtbahn eine halbe Spur innerhalb der Trassenmitte liegt (Slot -0.5 von
-# vier Familien). Damit gehen S3 und S5 hinter dem Ostkreuz spiegelbildlich
-# auseinander.
+# Die S3 faehrt diese Kurve allein und ist damit ihre eigene innerste Spur --
+# sie bekaeme den Default-Radius und saehe neben der Gegenkurve zu eng aus.
+# Hier steht darum von Hand genau der Bogen, den die S5 gegenueber zeichnet:
+# eine Spurbreite weiter als der Default, weil die S5 dort als aeussere Spur
+# ihres Paares faehrt. Damit gehen S3 und S5 hinter dem Ostkreuz
+# spiegelbildlich auseinander.
 #
 # Dazu das gerade Stueck davor: Beide Kurven haetten auf der Trassenmitte
 # denselben Scheitel, der gezeichnete wandert aber mit dem Spurversatz. Bei
@@ -617,7 +640,7 @@ _KURVE_OSTKREUZ_NOELDNERPLATZ: List[Step] = [
 # dem Ostkreuz sind gleich lang.
 _KURVE_OSTKREUZ_RUMMELSBURG: List[Step] = [
     FixPath(1.8 + sqrt(2) / 2 * CFG.style.bundle_spacing),
-    Turn(45, radius=_R_OSTKREUZ - 0.5 * CFG.style.bundle_spacing),
+    Turn(45, radius=CFG.netz.curve_radius_45 + CFG.style.bundle_spacing),
     FixPath(2.0),
 ]
 
@@ -663,7 +686,7 @@ _ABSCHNITT_WOLLANKSTRASSE_BORNHOLMER: List[Step] = _reversed(_ABSCHNITT_GESUNDBR
 # (Westkreuz, Gesundbrunnen, Suedkreuz) steht die Beschriftung aus anderen
 # Gruenden schraeg, dort gehoert das Tag schlicht unter den Namen.
 BADGE_OPPOSITE_CORNER: frozenset = frozenset({
-    "wannsee", "wildau", "blankenburg",
+    "wannsee", "wildau",
 })
 
 
@@ -675,6 +698,17 @@ LABEL_NUDGE: Dict[str, Pt] = {
     "westkreuz": (0.0, -18.0),
     "gesundbrunnen": (0.0, -18.0),
     "hauptbahnhof": (0.0, -18.0),
+    # Blankenburg und Pankow tragen ihr Tag ganz normal unter dem Namen.
+    # Beides zusammen rueckt ein Stueck nach rechts oben, weg von der
+    # schraegen Stettiner Bahn, an der es sonst klebt. Der Versatz gilt nur,
+    # solange dort wirklich ein Tag haengt -- spaetere Stufen nehmen ihn
+    # zurueck, wo die Linie nicht mehr endet.
+    "blankenburg": (7.0, -7.0),
+    "pankow": (7.0, -7.0),
+    # Der Name steht links der schraegen S1 zwischen Yorckstrasse und
+    # Schoeneberg und rueckt ein Stueck nach links unten, weg von der
+    # zweizeiligen Yorckstrasse darueber.
+    "julius_leber_bruecke": (-5.0, 5.0),
 }
 
 BADGE_NUDGE: Dict[str, Pt] = {
@@ -734,6 +768,12 @@ CORRIDORS: Dict[str, Corridor] = {
         # dazukommt.
         steps=_RING,
         offsets={"S42": 0.0, "S41": 1.0, "S4": -1.0, "S8": -1.0, "S6": -1.0, "S1": -1.0},
+        # Der Ring ist die Achse, um die herum die ganze Karte steht: seine
+        # Ecken sollen sich nicht bewegen, wenn sich an der Auslegung der
+        # Radien etwas aendert. Er behaelt deshalb die aeltere Lesart, in der
+        # der Radius der Trassenmitte gehoert und die innere Spur enger
+        # faehrt -- ueberall sonst gilt er fuer die innerste Spur.
+        radius_from_centre=True,
     ),
     "ring_zulauf_schoenhauser": Corridor(
         # Wie bei Koellnische Heide: S8/S85 muessen schon im Bogen vor
@@ -1032,8 +1072,8 @@ TRACK_LINES: Dict[str, TurnLine] = {
         start=45,
         steps=[
             *_slice(_WANNSEE_BAHN, "potsdam_hbf", "nikolassee"),
-            Turn(-45), FlexPath(), 
-            Turn(45, radius=0.8), FixPath(2.4),  # Bogen um den Grunewald
+            Turn(-45), FlexPath(),
+            Turn(45), FixPath(2.4),              # Bogen um den Grunewald
             "grunewald",
             *_KURVE_GRUNEWALD_WESTKREUZ,
             *_STADTBAHN,
@@ -1066,7 +1106,7 @@ TRACK_LINES: Dict[str, TurnLine] = {
         start=180,
         steps=[
             *_AUSSEN_RING,
-            FixPath(2.6), Turn(90), FlexPath(),   # Aussenring -> Stettiner Bahn
+            FixPath(3.0), Turn(90), FlexPath(),   # Aussenring -> Stettiner Bahn
             *_reversed(_slice(_STETTINER_BAHN, "pankow", "blankenburg")),
             *_reversed(_KURVE_BORNHOLMER_PANKOW),
             "bornholmer_strasse",
@@ -1224,6 +1264,7 @@ NET = Net(
     label_offsets=LABEL_NUDGE,
     badge_offsets=BADGE_NUDGE,
     badge_opposite_corner=BADGE_OPPOSITE_CORNER,
+    draw_over=DRAW_OVER,
     # Linke Kante der Zuggruppen-Tabelle, in Kartenkoordinaten: links
     # oben, neben dem Nordwesten der Karte. Die Hoehe bleibt offen (None)
     # -- dann haengt die Tabelle so tief, wie ihre Spalte es zulaesst, und

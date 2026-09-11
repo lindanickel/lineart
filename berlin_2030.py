@@ -64,28 +64,26 @@ _SIEMENSBAHN: List[Step] = [
     "gartenfeld", FixPath(1.8),
     "siemensstadt", FixPath(1.8),
     "wernerwerk", FixPath(2.2),
+    # Weiter als der Standard (0.8), und zwar mit Absicht: die S6 schwenkt
+    # hier auf den Ring ein, dessen Kurve daneben ebenfalls weit ausgefahren
+    # ist. Mit dem Standardradius saehe der Einschwenker daneben zu eng aus.
     Turn(-45, radius=1.2),
 ]
 
 # Auf beiden Kurven zum Hauptbahnhof fahren jetzt drei Linien nebeneinander
-# statt einer. Der gezeichnete Bogen wird je Spur um deren Versatz gegen die
-# Trassenmitte korrigiert, damit die Spuren konzentrisch bleiben.
-#
-# Bei Wedding wechselt das ganze Buendel im Bogen die Spur; sein Mittelwert
-# liegt dort auf der Trassenmitte, die innerste Spur faehrt also genau den
-# Grundradius -- der bleibt deshalb der des Bestands.
+# statt einer. Beide behalten trotzdem den Standardradius: er gilt fuer die
+# innerste Spur des Buendels, die faehrt ihn also unveraendert, und die
+# weiter aussen liegenden bekommen je eine Spurbreite mehr. Ein Aufschlag von
+# Hand -- frueher noetig, als der Radius der Trassenmitte gehoerte -- ist
+# damit ueberfluessig.
 _R_WEDDING = 0.4                              # Ring -> Perleberger Bruecke
-# Vor dem Hauptbahnhof behaelt jede Linie ihre Spur, die innerste liegt eine
-# Spurbreite innen. Um genau die ist der Grundradius groesser als im Bestand,
-# damit sie denselben Bogen faehrt wie die S15 dort 2026 als einzige Linie.
-_R_HBF = 0.8 + CFG.style.bundle_spacing       # Perleberger Bruecke -> Hbf
 
 # Zulauf zum Hauptbahnhof: ab der Perleberger Bruecke auf die Trasse, die im
 # Bestand schon die S15 benutzt. Hier endet die S6 -- der Tunnel weiter zum
 # Potsdamer Platz gehoert in die naechste Stufe.
 _HBF_ZULAUF: List[Step] = [
     "perlegerberger_bruecke", FlexPath(),
-    *splice(bestand._NORD_SUED_TUNNEL_HBF, [Turn(45)], [Turn(45, radius=_R_HBF)]),
+    *bestand._NORD_SUED_TUNNEL_HBF,
 ]
 
 S6 = TurnLine(
@@ -108,7 +106,7 @@ _S15_MIT_BRUECKE = VORGAENGER.splice_line(
     "S15",
     [Turn(-135, radius=0.4), FlexPath(), Turn(45), FlexPath()],
     [Turn(-135, radius=_R_WEDDING), FlexPath(),
-     "perlegerberger_bruecke", FlexPath(), Turn(45, radius=_R_HBF), FlexPath()],
+     "perlegerberger_bruecke", FlexPath(), Turn(45), FlexPath()],
 )
 
 
@@ -322,9 +320,19 @@ S86_ENDPUNKTE: List[Station] = [
 # Charlottenburg wird Endbahnhof der S3 und damit Umsteigepunkt; an der
 # Warschauer Strasse endet dafuer keine Linie mehr -- die S75 faehrt jetzt
 # durch bis Spandau.
+#
+# In Pankow endet mit dem HVZ-Ast der S85 die letzte Linie, die dort nicht
+# ohnehin nur vorbeifaehrt: S2, S26, S8 und S86 laufen als Familien S2 und
+# S8 nebeneinander her, umsteigen muss dort niemand. Also ein gewoehnlicher
+# Halt statt der Umsteigepille -- wie in Schoenholz und an der Schoenhauser
+# Allee.
 UMGEWIDMETE_STATIONEN: List[Station] = [
     replace(VORGAENGER.stations["charlottenburg"], kind="hub"),
     replace(VORGAENGER.stations["warschauer_strasse"], kind="station"),
+    replace(VORGAENGER.stations["pankow"], kind="station"),
+    # Nur in 2030 und 2030plus zweizeilig; 2040plus nimmt den Umbruch
+    # wieder zurueck.
+    replace(VORGAENGER.stations["messe_nord_zob"], label="Messe Nord/\nZOB"),
 ]
 
 
@@ -406,11 +414,9 @@ STADTBAHN_WEST_CORRIDORS: Dict[str, Corridor] = {
 # GEDEHNTE GERADEN
 # ============================================================================
 #
-# Zwei Geraden werden laenger: Adlershof -- Gruenau um 0.6, die hinter
-# Muehlenbeck-Moenchmuehle um 1.0. Beides sind Bildkorrekturen, keine
-# Netzaenderungen: zwischen Adlershof und Gruenau braucht die Gabel zum
-# Flughafenast Platz, und hinter Muehlenbeck-Moenchmuehle rueckt die
-# 90-Grad-Kurve von der Beschriftung ab.
+# Eine Gerade wird laenger: Adlershof -- Gruenau um 0.6. Das ist eine
+# Bildkorrektur, keine Netzaenderung -- die Gabel zum Flughafenast braucht
+# dort Platz.
 #
 # Eine Kante muss in ALLEN Linien dieselbe Form haben. Die Dehnung wird
 # deshalb ueber jede Linie gelegt, die die Stelle befaehrt -- auch ueber die
@@ -418,8 +424,6 @@ STADTBAHN_WEST_CORRIDORS: Dict[str, Corridor] = {
 _DEHNUNGEN = [
     (["adlershof", FixPath(2.4), "gruenau"],
      ["adlershof", FixPath(3.0), "gruenau"]),
-    (["muehlenbeck_moenchmuehle", FixPath(2.6)],
-     ["muehlenbeck_moenchmuehle", FixPath(3.6)]),
 ]
 
 
@@ -518,12 +522,20 @@ NET = VORGAENGER.derive(
     # damit breiter als der Name. Unter ihm stiesse sie auf "Tiergarten" --
     # sie steht deshalb DARUEBER; so muss auch bei weiteren Linien nichts
     # mehr nachgeschoben werden.
+    # Westlich des Westkreuzes ueberquert die S7 aus dem Grunewald die S9,
+    # die seit dieser Stufe von Spandau kommt. Beide kreuzen dort eine
+    # einzelne fremde Spur, und ohne Vorgabe entschiede die hoehere
+    # Familiennummer -- die S9 laege oben. Sie kommt aber aus derselben
+    # Gabel wie die S75 nebenan und liegt in ihr innen; die S7 gehoert
+    # darueber, sonst schneidet die Gabel sich selbst.
+    crossing_over={"S7": ("S9",)},
     badge_above=("hauptbahnhof",),
-    # An beiden Enden der S86 laeuft die Strecke schraeg unter der
-    # Beschriftung durch -- das Tag unter dem Namen laege auf den Linien. Es
-    # geht deshalb auf die gegenueberliegende Ecke, wie in Wannsee und
-    # Wildau.
-    badge_opposite_corner=("gruenau", "buch"),
+    # In Gruenau laeuft die Strecke schraeg unter der Beschriftung durch --
+    # das Tag unter dem Namen laege auf den Linien. Es geht deshalb auf die
+    # gegenueberliegende Ecke, wie in Wannsee und Wildau. In Buch loest ein
+    # Versatz dasselbe besser (siehe `label_offsets`): das Tag bleibt dort,
+    # wo es hingehoert, naemlich unter seinem Namen.
+    badge_opposite_corner=("gruenau",),
     # Alphabetisch stuende die S15 vor der S6. Die Reihe folgt stattdessen
     # den Spuren, die von oben in die Station laufen: S6, S15, S85.
     badge_order={"hauptbahnhof": ("S6", "S15", "S85")},
@@ -533,7 +545,20 @@ NET = VORGAENGER.derive(
     # Durchgangsstation gar keins mehr. Der Gesundbrunnen behaelt einen
     # kleinen Lift: seine Pille ist mit der zweiten Westlinie auf 2x4
     # gewachsen und reicht weiter nach oben als frueher.
-    label_offsets={"hauptbahnhof": REMOVE, "gesundbrunnen": (0.0, -12.0)},
+    # Buch traegt sein Tag ganz normal unter dem Namen -- welches es ist,
+    # wechselt mit der Ausbaustufe (hier S86, spaeter S8 und S85). Name und
+    # Tag zusammen rueckt ein Stueck nach rechts oben, weg von der
+    # schraegen Stettiner Bahn, an der sie sonst kleben.
+    #
+    # In Pankow entfaellt derselbe Versatz: der HVZ-Ast der S85 endet hier
+    # nicht mehr, die Station traegt also kein Tag mehr, und ohne Tag soll
+    # der Name da stehen, wo ihn die Automatik hinsetzt.
+    label_offsets={
+        "hauptbahnhof": REMOVE,
+        "gesundbrunnen": (0.0, -12.0),
+        "buch": (7.0, -7.0),
+        "pankow": REMOVE,
+    },
     # Die Tabelle ist um S6 und S86 gewachsen, und unter ihr liegt jetzt
     # der Gartenfelder Ast. Wie weit sie deshalb nach oben rueckt, rechnet
     # der Renderer aus (Hoehe None): sie haelt zu "(Gartenfeld)" denselben

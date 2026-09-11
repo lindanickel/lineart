@@ -92,7 +92,10 @@ in Stufe 2.
 
 Mit dem durchgebundenen Tunnel gibt die S85 die Nordbahn ab und endet in
 Pankow; die S15 übernimmt sie und fährt von Frohnau bis Zehlendorf durch.
-Die S25 fährt im 10-Minuten-Takt, die S26 entfällt dadurch.
+Aus den beiden Zuggruppen der S25 werden zwei Linien: die S25 fährt über den
+neuen Tunnel und den Hauptbahnhof bis Velten, die S26 auf dem alten Weg durch
+den Nord-Süd-Tunnel bis Hennigsdorf. Ihren bisherigen Nordast Pankow –
+Blankenburg gibt die S26 an die S2 ab.
 
 ![S-Bahn-Netz 2030plus](outputs/berlin_sbahn_2030plus.png)
 

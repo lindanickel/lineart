@@ -156,7 +156,16 @@ class Net:
 
     stations, lines, colors  das Net selbst
     corridors                von Hand festgelegte Spurlagen
-    label_override           Beschriftung an einer Station voll manuell
+    label_override           Beschriftung voll von Hand: Station -> (x, y,
+                             Textanker). x und y sind Pixel AB DER
+                             STATIONSMITTE, positiv nach rechts und nach
+                             unten; der Anker ist "start", "middle" oder
+                             "end". Die automatische Lage entfaellt damit
+                             ganz -- kein Ausweichen um die Buendelbreite,
+                             kein Markerabstand. Fuer die kleine Korrektur
+                             an einer sonst automatisch gesetzten
+                             Beschriftung ist `label_offsets` das richtige
+                             Werkzeug.
     label_offsets            Feinkorrektur in Pixeln, verschiebt Name UND Tag
     badge_offsets            Feinkorrektur, verschiebt nur das Linien-Tag
     badge_opposite_corner          Stationen, an denen das Tag auf die
@@ -167,6 +176,14 @@ class Net:
                              sich kreuzen. Setzt die automatische Wahl der
                              obenliegenden Linie ausser Kraft; gefragt wird
                              nach Familien (S8 meint auch die S85)
+    draw_over                Linie -> Linien, ueber denen sie GEZEICHNET
+                             wird. Ohne Eintrag liegt innerhalb einer
+                             Familie die Stammlinie oben; hier genannt liegt
+                             eine Linie auch ueber ihr und zeigt auf einer
+                             gemeinsamen Spur ihre eigene Farbe. Anders als
+                             `crossing_over` meint das LINIEN, nicht
+                             Familien -- innerhalb einer Familie ist das der
+                             einzige Unterschied
     badge_above              Stationen, an denen die Signetreihe UEBER dem
                              Namen steht statt darunter -- fuer Bahnhoefe,
                              an denen so viele Linien enden, dass die Reihe
@@ -193,6 +210,7 @@ class Net:
     badge_above: FrozenSet[str] = frozenset()
     badge_order: Mapping[str, Tuple[str, ...]] = field(default_factory=dict)
     crossing_over: Mapping[str, Tuple[str, ...]] = field(default_factory=dict)
+    draw_over: Mapping[str, Tuple[str, ...]] = field(default_factory=dict)
     legend_at: Optional[Tuple[float, Optional[float]]] = None
 
     def __post_init__(self) -> None:
@@ -248,6 +266,7 @@ class Net:
         badge_above=None,
         badge_order: Optional[Mapping[str, Any]] = None,
         crossing_over: Optional[Mapping[str, Any]] = None,
+        draw_over: Optional[Mapping[str, Any]] = None,
         groups: Optional[Mapping[str, Sequence[TrainGroup]]] = None,
         legend_at=None,
     ) -> "Net":
@@ -306,6 +325,7 @@ class Net:
             crossing_over=_merge_map(
                 self.crossing_over, crossing_over, "crossing_over"
             ),
+            draw_over=_merge_map(self.draw_over, draw_over, "draw_over"),
             legend_at=(
                 self.legend_at if legend_at is None
                 else None if isinstance(legend_at, _Remove)
@@ -356,6 +376,7 @@ def render_svg(
         badge_above=net.badge_above,
         badge_order=net.badge_order,
         crossing_over=net.crossing_over,
+        draw_over=net.draw_over,
         label_offsets=net.label_offsets,
         badge_offsets=net.badge_offsets,
         legend_at=net.legend_at,

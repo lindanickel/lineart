@@ -327,7 +327,14 @@ class NetworkConfig:
     min_gap_default: float = 0.2
 
     # KREISRADIEN der Rundungen, in Gitter-Einheiten (wie spacing) -- nicht
-    # in Pixeln, und nicht die Tangentenlaenge. Die Tangente wird intern
+    # in Pixeln, und nicht die Tangentenlaenge. Sie gelten fuer die
+    # TRASSENMITTE. Was eine einzelne Linie zeichnet, haengt daneben von
+    # ihrer Spur ab: laeuft im Bogen ein Nachbar mit, werden die Boegen
+    # konzentrisch und die aeussere Spur bekommt den groesseren Radius.
+    # Faehrt eine Linie den Bogen allein, behaelt sie diesen Wert, auch wenn
+    # ihre Spur neben der Trassenmitte liegt. Wer den Radius an einer
+    # sichtbaren Linie festmachen will statt an der Mitte, schreibt ihn in
+    # `Corridor.radius_at`. Die Tangente wird intern
     # berechnet: t = R * tan(delta/2). Ein explizites Turn(radius=...) ist
     # ebenfalls ein Kreisradius und schlaegt diese Defaults.
     #
@@ -665,6 +672,34 @@ class Corridor:
              Das ist meist richtig, nicht aber dort, wo eine durchfahrende
              Linie ihren Versatz erst in der Kurve uebernimmt und die
              beginnende Linie bis dahin neben ihr laufen soll.
+    radius_from_centre
+             Haelt an der aelteren Lesart fest: der Radius gilt fuer die
+             TRASSENMITTE, jede Spur bekommt ihn um ihren eigenen Versatz
+             korrigiert -- die innere also enger als den Definitionswert.
+             Normalerweise gilt er fuer die innerste Spur des Buendels und
+             ist damit eine Untergrenze. Gedacht fuer Achsen, deren Form
+             steht und sich durch eine Regeländerung nicht verschieben soll
+             (die Ringbahn).
+    radius_at
+             Kreisradius der Knicke DIESER Kante, ausgedrueckt an EINER
+             Linie: {"S15": 0.8} heisst "die S15 zeichnet einen Bogen mit
+             Radius 0.8". Alle anderen Linien der Kante bleiben dazu
+             konzentrisch -- ihr Radius ergibt sich aus dem Spurabstand zur
+             Bezugslinie. Das ist die Schreibweise, die man beim Hinsehen
+             pruefen kann: der Wert gilt fuer eine Linie, die man auf der
+             Karte findet, nicht fuer die unsichtbare Trassenmitte. Er gilt
+             ausserdem unabhaengig davon, ob im Bogen ein Nachbar mitlaeuft.
+    radii
+             Notausgang: Kreisradius je Linie, OHNE Ruecksicht auf
+             Konzentrizitaet. Nur dort einsetzen, wo die Linien sich hinter
+             dem Bogen ohnehin trennen -- innerhalb eines durchlaufenden
+             Buendels driften sie damit im Bogen auseinander. Ersetzt den
+             Wert, den die Trasse traegt. Ein Buendel faehrt dieselbe
+             Trasse, seine Linien liegen darauf aber auf verschiedenen
+             Spuren -- und die aussen liegende darf ihren Bogen weiter
+             ausfahren als die innere. Wirkt nur auf die Zeichnung: die
+             Trasse selbst, und damit jede Laenge im Netz, bleibt
+             unveraendert. Schluessel ist die Linien-ID oder ihre Familie.
     shift_at
              Wo auf dem Bein der Schwenk sitzt: "start", "middle" (Default)
              oder "end". Gemeint ist die FAHRTRICHTUNG der schwenkenden
@@ -678,6 +713,9 @@ class Corridor:
     steps: Sequence[Step]
     offsets: Mapping[str, float]
     start_offsets: Mapping[str, float] = field(default_factory=dict)
+    radius_from_centre: bool = False
+    radius_at: Mapping[str, float] = field(default_factory=dict)
+    radii: Mapping[str, float] = field(default_factory=dict)
     immediate: bool = False
     shift_at: str = "middle"
 
@@ -714,6 +752,13 @@ class Station:
             Spurversatz wie jede andere Station, bekommt aber keinen
             Stationspunkt gezeichnet. Das Label bleibt davon unberuehrt --
             fuer einen wirklich unsichtbaren Punkt zusaetzlich label="".
+    pill_with
+            ID eines Hubs, dessen Pille diese Station mit ueberspannen soll.
+            Fuer den Fall, dass EIN Bahnhof auf zwei Trassen liegt, die sich
+            nicht treffen: jede Trasse braucht ihren eigenen Knoten, aber
+            gezeichnet wird eine einzige Pille ueber beide. Der Marker der
+            zweiten Station entfaellt damit; ihre Beschriftung sollte leer
+            sein, den Namen traegt der Hub.
     """
     id: str
     name: str
@@ -722,6 +767,7 @@ class Station:
     label_pos: Optional[str] = None
     planned: bool = False
     hidden: bool = False
+    pill_with: Optional[str] = None
 
     def __post_init__(self) -> None:
         if not self.id.strip():

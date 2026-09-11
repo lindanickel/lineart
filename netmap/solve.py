@@ -923,6 +923,13 @@ def _corridor_slot_overrides(
     sofort: Dict[frozenset, str] = {}
     # Startspuren aus Corridor.start_offsets, gleich normiert wie die Slots
     startspuren: Dict[frozenset, Dict[str, float]] = {}
+    # Abweichende Bogenradien aus Corridor.radii, je Kante und Linie. Ohne
+    # Vorzeichen: ein Radius hat keine Seite.
+    bogen: Dict[frozenset, Dict[str, float]] = {}
+    # Bezugsradien aus Corridor.radius_at: (Bezugslinie, ihr Radius) je Kante
+    bezug: Dict[frozenset, Tuple[str, float]] = {}
+    # Kanten mit Corridor.radius_from_centre: alte Lesart, Radius = Mitte
+    mitte: set = set()
     for name, corridor in corridors.items():
         ids = [step for step in corridor.steps if isinstance(step, str)]
         for a, b in zip(ids, ids[1:]):
@@ -966,11 +973,41 @@ def _corridor_slot_overrides(
                 }
             else:
                 startspuren.pop(key, None)
+            if corridor.radius_from_centre:
+                mitte.add(key)
+            else:
+                mitte.discard(key)
+            if corridor.radius_at:
+                if len(corridor.radius_at) != 1:
+                    raise GeometryError(
+                        f"Korridor '{name}': radius_at nennt genau EINE "
+                        "Bezugslinie, alle anderen liegen konzentrisch dazu"
+                    )
+                (ref_id, ref_r), = corridor.radius_at.items()
+                if ref_id not in edge_lines[key]:
+                    raise GeometryError(
+                        f"Korridor '{name}': radius_at nennt '{ref_id}', die "
+                        f"Kante {a} -> {b} aber nicht befaehrt"
+                    )
+                bezug[key] = (ref_id, ref_r)
+            else:
+                bezug.pop(key, None)
+            if corridor.radii:
+                bogen[key] = {
+                    line_id: (corridor.radii[line_id]
+                              if line_id in corridor.radii
+                              else corridor.radii[families.get(line_id, line_id)])
+                    for line_id in edge_lines[key]
+                    if line_id in corridor.radii
+                    or families.get(line_id, line_id) in corridor.radii
+                }
+            else:
+                bogen.pop(key, None)
             if corridor.immediate:
                 sofort[key] = corridor.shift_at
             else:
                 sofort.pop(key, None)
-    return overrides, sofort, startspuren
+    return overrides, sofort, startspuren, bogen, bezug, mitte
 
 
 def _compute_bundle_slots(
@@ -979,7 +1016,8 @@ def _compute_bundle_slots(
     families: Optional[Mapping[str, str]] = None,
     corridors: Optional[Mapping[str, Corridor]] = None,
 ) -> Tuple[Dict[frozenset, Dict[str, float]], Dict[frozenset, str],
-             Dict[frozenset, Dict[str, float]]]:
+             Dict[frozenset, Dict[str, float]], Dict[frozenset, Dict[str, float]],
+             Dict[frozenset, Tuple[str, float]]]:
     """Weist jeder (Korridorkante, Linie) einen zentrierten Slot-Index zu,
     fuer alle Kanten, die mindestens eine der `line_ids` befaehrt.
 
@@ -1061,13 +1099,16 @@ def _compute_bundle_slots(
     # Von Hand definierte Korridore schlagen die automatische Vergabe.
     sofort: Dict[frozenset, str] = {}
     startspuren: Dict[frozenset, Dict[str, float]] = {}
+    bogen: Dict[frozenset, Dict[str, float]] = {}
+    bezug: Dict[frozenset, Tuple[str, float]] = {}
+    mitte: set = set()
     if corridors:
         fam_map = {lid: fam(lid) for lids in edge_lines.values() for lid in lids}
-        overrides, sofort, startspuren = _corridor_slot_overrides(
+        overrides, sofort, startspuren, bogen, bezug, mitte = _corridor_slot_overrides(
             layout, corridors, edge_lines, fam_map
         )
         edge_line_slot.update(overrides)
-    return edge_line_slot, sofort, startspuren
+    return edge_line_slot, sofort, startspuren, bogen, bezug, mitte
 
 
 def _offset_points(
@@ -1159,6 +1200,116 @@ def _lane_map(
             a, b = leg[0], leg[1]
             lanes[_leg_key(a, b)][families.get(lid, lid)] = _canonical_lane(a, b, offs[k])
     return lanes
+
+
+def _vertex_key(p: Pt) -> Tuple[float, float]:
+    """Knickpunkt auf der TRASSENMITTE als Schluessel.
+
+    Die Beine in `_line_legs` laufen auf der Mittellinie, nicht auf der
+    versetzten Spur -- derselbe Knick hat fuer jede Linie der Kante deshalb
+    denselben Punkt, und der taugt als gemeinsamer Schluessel.
+    """
+    return (round(p[0], 6), round(p[1], 6))
+
+
+def _radius_targets(
+    layout: LayoutResult,
+    bezug: Mapping[frozenset, Tuple[str, float]],
+    eigene: Mapping[frozenset, Mapping[str, float]],
+    mitte: Iterable[frozenset],
+    bundle_spacing: float,
+    lanes: Optional[Mapping[Tuple[float, float], Mapping[str, float]]] = None,
+    families: Optional[Mapping[str, str]] = None,
+    **legs_kwargs,
+) -> Tuple[Dict[Tuple[float, float], Tuple[float, float]],
+           Dict[Tuple[str, Tuple[float, float]], float],
+           set]:
+    """Knickpunkt -> (Radius der Bezugslinie, ihre Versatzkorrektur).
+
+    Fuer jede Kante mit `Corridor.radius_at` wird die Bezugslinie einmal
+    aufgebaut und an ihren Knicken auf dieser Kante festgehalten, wie stark
+    `_corner_radius` ihren Radius korrigieren wird. Aus beidem bildet
+    `_line_path` den Wert der Mittellinie zurueck.
+    """
+    # Corridor.radii: (Linie, Knickpunkt) -> Radius, den genau sie zeichnet.
+    je_linie: Dict[Tuple[str, Tuple[float, float]], float] = {}
+    for key, radien in eigene.items():
+        for punkt in layout.tracks.corridor_paths[key]:
+            for lid, r in radien.items():
+                je_linie[(lid, _vertex_key(punkt))] = r
+
+    families = families or {}
+    # Kanten mit `radius_from_centre`, als Knickpunkte
+    zentral = {
+        _vertex_key(p)
+        for key in mitte
+        for p in layout.tracks.corridor_paths[key]
+    }
+
+    ziele: Dict[Tuple[float, float], Tuple[float, float]] = {}
+    for key, (ref_id, ref_r) in bezug.items():
+        # Alle Punkte der Kante, auch ihre Enden: ein Knick kann genau auf
+        # einer Station sitzen, und dort gehoert er zur Kante, die ihn
+        # nennt.
+        ecken = {_vertex_key(p) for p in layout.tracks.corridor_paths[key]}
+        legs, _, offs = _line_legs(layout, ref_id, **legs_kwargs)
+        for k in range(1, len(legs)):
+            corner = legs[k][3]
+            if corner is None or not _leg_turns(legs, k):
+                continue
+            punkt = _vertex_key(legs[k][0])
+            if punkt not in ecken:
+                continue
+            sgn = 1 if corner.delta > 0 else -1
+            versatz = (offs[k - 1] + offs[k]) / 2 * bundle_spacing
+            innerste = (
+                _curve_inner(lanes, legs, offs, k, families.get(ref_id, ref_id),
+                             bundle_spacing)
+                if lanes is not None else sgn * versatz
+            )
+            ziele[punkt] = (ref_r, sgn * versatz - innerste)
+    return ziele, je_linie, zentral
+
+
+def _curve_inner(
+    lanes: Mapping[Tuple[float, float], Mapping[str, float]],
+    legs: Sequence[tuple],
+    offs: Sequence[float],
+    k: int,
+    family: str,
+    bundle_spacing: float,
+) -> float:
+    """Wie weit innen liegt die INNERSTE Spur des Buendels in diesem Bogen?
+
+    Gemessen als der Betrag, den `_corner_radius` ihr vom Radius abzoege --
+    je groesser, desto weiter innen. Zurueck kommt das Maximum ueber die
+    Linie selbst und alle Nachbarfamilien, die den Knick mit
+    GLEICHBLEIBENDEM Abstand mitfahren; nur die gehoeren zum selben Buendel
+    und muessen konzentrisch bleiben. Wer den Bogen allein faehrt, ist seine
+    eigene innerste Spur.
+
+    Damit bekommt die innerste Spur den vollen Default-Radius und jede
+    weiter aussen liegende genau so viel mehr, wie sie danebenliegt. Der
+    Radius in der Definition ist so eine Untergrenze: enger als er wird
+    keine Kurve gezeichnet, auch nicht im Buendel.
+    """
+    vor_leg, nach_leg = legs[k - 1], legs[k]
+    sgn = 1 if (nach_leg[3] and nach_leg[3].delta > 0) else -1
+    eigen = (offs[k - 1] + offs[k]) / 2 * bundle_spacing
+    innerste = sgn * eigen
+    vor = lanes.get(_leg_key(vor_leg[0], vor_leg[1]), {})
+    nach = lanes.get(_leg_key(nach_leg[0], nach_leg[1]), {})
+    for fremd, lane_vor in vor.items():
+        if fremd == family or fremd not in nach:
+            continue
+        # In die FAHRTrichtung dieser Linie zurueckgerechnet -- das
+        # Bezugssystem der Spurkarte haengt am Bein und kippt am Knick.
+        abstand_vor = _canonical_lane(*vor_leg[:2], lane_vor) - offs[k - 1]
+        abstand_nach = _canonical_lane(*nach_leg[:2], nach[fremd]) - offs[k]
+        if abs(abstand_vor - abstand_nach) > 1e-9:
+            continue          # kein gleichbleibender Abstand: fremdes Buendel
+        innerste = max(innerste, sgn * (eigen + abstand_vor * bundle_spacing))
+    return innerste
 
 
 def _neighbour_in_curve(
@@ -1324,6 +1475,9 @@ def _line_path(
     bundle_spacing: float = 0.0,
     bezier_shift: bool = False,
     bezier_span: float = 1.0,
+    radius_targets: Optional[Mapping[Tuple[float, float], Tuple[float, float]]] = None,
+    radius_own: Optional[Mapping[Tuple[str, Tuple[float, float]], float]] = None,
+    radius_central: Optional[Iterable[Tuple[float, float]]] = None,
     **legs_kwargs,
 ) -> LinePath:
     """Rekonstruiert den durchgehenden Streckenzug einer Linie in
@@ -1434,9 +1588,9 @@ def _line_path(
             # Boegen konzentrisch sein, sonst liefen sie auseinander. Faehrt
             # die Linie den Bogen allein, verzoege die Korrektur ihn ohne
             # Grund -- sie behaelt den Default-Radius.
-            parallel = lanes is not None and _neighbour_in_curve(
-                lanes, legs, offs, k, family
-            )
+            punkt = _vertex_key(legs[k][0])
+            gesetzt = (radius_own or {}).get((line_id, punkt))
+            bezug = (radius_targets or {}).get(punkt)
             # Massgeblich ist die MITTE aus der Spur vor und hinter dem Knick,
             # nicht die davor. Der Grund ist die Fahrtrichtung: "davor" liegt
             # fuer zwei gegenlaeufige Linien an entgegengesetzten Enden
@@ -1448,10 +1602,50 @@ def _line_path(
             # Der Mittelwert ist richtungsunabhaengig: rueckwaerts kehren sich
             # beide Summanden um UND der Drehsinn, das Produkt bleibt gleich.
             # Wo eine Linie ihre Spur behaelt, ist er ohnehin ihr Versatz.
+            # Der Radius gilt fuer die INNERSTE Spur des Buendels: sie
+            # zeichnet ihn unveraendert, jede weiter aussen liegende bekommt
+            # genau so viel mehr, wie sie danebenliegt. Faehrt die Linie den
+            # Bogen allein, ist sie selbst die innerste und behaelt ihren
+            # Wert -- auch wenn ihre Spur neben der Trassenmitte liegt.
             versatz = (offs[k - 1] + offs[k]) / 2 * bundle_spacing
-            corner = replace(
-                corner, offset=versatz if parallel else 0.0
-            )
+            sgn = 1 if corner.delta > 0 else -1
+            if radius_central is not None and punkt in radius_central:
+                # `Corridor.radius_from_centre`: die aeltere Lesart -- der
+                # Radius gehoert der Trassenmitte, jede Spur weicht um ihren
+                # eigenen Versatz davon ab. Nur dort, wo eine Achse ihre
+                # gewachsene Form behalten soll.
+                parallel = lanes is not None and _neighbour_in_curve(
+                    lanes, legs, offs, k, family
+                )
+                korrektur = versatz if parallel else 0.0
+            else:
+                innerste = (
+                    _curve_inner(lanes, legs, offs, k, family, bundle_spacing)
+                    if lanes is not None else sgn * versatz
+                )
+                korrektur = sgn * (sgn * versatz - innerste)
+            if gesetzt is not None:
+                # `Corridor.radii`: der Notausgang -- diese Linie zeichnet
+                # genau diesen Bogen, ohne Ruecksicht auf die Nachbarn und
+                # ohne Deckel aus den Beinlaengen.
+                corner = replace(corner, radius=gesetzt, offset=0.0, forced=True)
+            elif bezug is not None:
+                # `Corridor.radius_at`: der Bogen ist an EINER Linie
+                # festgemacht. `bezug` ist ihr Radius plus die Korrektur, die
+                # `_corner_radius` bei ihr abziehen wird -- die Summe ist der
+                # Wert der Mittellinie. Zieht die eigene Korrektur davon ab,
+                # bleibt ein zur Bezugslinie konzentrischer Radius, und fuer
+                # sie selbst genau der gesetzte Wert.
+                #
+                # Die Korrektur gilt hier IMMER, auch ohne Nachbarn im Bogen:
+                # ein ausdruecklich gesetzter Radius soll nicht davon
+                # abhaengen, wer sonst noch mitfaehrt.
+                ref_r, ref_korrektur = bezug
+                corner = replace(
+                    corner, radius=ref_r + ref_korrektur, offset=korrektur
+                )
+            else:
+                corner = replace(corner, offset=korrektur)
         points.append((p[0] + ux * t, p[1] + uy * t))
         corners.append(corner)
 
@@ -1506,7 +1700,7 @@ def build_line_layout(
     """
     ids = list(line_ids)
     fams = {lid: (families or {}).get(lid, lid) for lid in ids}
-    slots, immediate, startspuren = _compute_bundle_slots(
+    slots, immediate, startspuren, bogen, bezug, mitte = _compute_bundle_slots(
         layout, ids, fams, corridors
     )
     legs_kwargs = dict(
@@ -1518,12 +1712,19 @@ def build_line_layout(
     # konzentrisch zu einem Nachbarn liegen muss, laesst sich nicht an einer
     # Linie allein entscheiden.
     lanes = _lane_map(layout, ids, fams, **legs_kwargs)
+    ziele, eigene, zentral = _radius_targets(
+        layout, bezug, bogen, mitte, bundle_spacing,
+        lanes=lanes, families=fams, **legs_kwargs
+    )
     paths = {
         line_id: _line_path(
             layout, line_id,
             lanes=lanes,
             family=fams[line_id],
             bundle_spacing=bundle_spacing,
+            radius_targets=ziele,
+            radius_own=eigene,
+            radius_central=zentral,
             bezier_shift=bezier_shift,
             bezier_span=bezier_span,
             **legs_kwargs,
