@@ -55,7 +55,7 @@ def suffix_start(text: str) -> Optional[int]:
     Ein Zusatz ist nur, was NACH dem eigentlichen Namen kommt -- etwa
     "Messe Sued\n(Eichkamp)". Steht dagegen der ganze Name in Klammern
     (also schon Zeile 0), ist die Klammer Teil des Namens und keine
-    Ergaenzung: "(Perlegerberger Bruecke)" wird normal gross gesetzt.
+    Ergaenzung: "(Perleberger Bruecke)" wird normal gross gesetzt.
     """
     for i, zeile in enumerate(text.split("\n")):
         if zeile.startswith("("):
@@ -219,6 +219,7 @@ def build_track_svg(
     badge_order: Optional[Mapping[str, Sequence[str]]] = None,
     crossing_over: Optional[Mapping[str, Sequence[str]]] = None,
     draw_over: Optional[Mapping[str, Sequence[str]]] = None,
+    direction_arrows: Optional[Mapping[str, Sequence[Sequence[str]]]] = None,
 ) -> str:
     """Phase 5 (Darstellung): zeichnet ein fertig geloestes `LayoutResult`.
 
@@ -881,6 +882,114 @@ def build_track_svg(
                                 f'stroke-linecap="butt" stroke-linejoin="round"/>'
                             )
 
+    # Richtungspfeile (`direction_arrows`): zwei spitze Dreiecke auf der
+    # Linie, unten ein weisses, darueber eines in Linienfarbe. Das weisse
+    # liegt in Fahrtrichtung vor, vorn bleibt so ein schmaler weisser Rand
+    # stehen. Sie stehen -- bis auf `arrow_stagger` -- in der Mitte des SICHTBAREN Stuecks
+    # zwischen den beiden Stationen -- gemessen ab dem Rand von Pille, Ring
+    # bzw. Stationspunkt, nicht ab der Stationsmitte; eine grosse Pille wie
+    # am Westkreuz schoebe sie sonst sichtbar aus der Mitte. Gezeichnet nach
+    # den Kreuzungsfenstern, damit deren Nachzeichnen sie nicht zudeckt.
+    def marker_enthaelt(sid: str, lid: str, p: Pt) -> bool:
+        """Liegt p unter dem sichtbaren Marker der Station -- ihrer Pille
+        samt Umrandung, ihrem Endstationsring oder dem Punkt von `lid`?"""
+        if sid in pills:
+            grad, x0, y0, breite, hoehe = pills[sid]
+            a = radians(grad)
+            ca, sa = cos(a), sin(a)
+            qx = p[0] * ca + p[1] * sa
+            qy = -p[0] * sa + p[1] * ca
+            r = style.hub_pill_r
+            kx = min(max(qx, x0 + r), x0 + breite - r)
+            ky = min(max(qy, y0 + r), y0 + hoehe - r)
+            return hypot(qx - kx, qy - ky) <= r + style.hub_pill_stroke / 2
+        q = px(line_layout.paths[lid].stations[sid])
+        pline_ = layout.network.parsed[lid]
+        if not pline_.closed and sid in _line_ends(pline_):
+            radius = style.terminus_ring_r + style.terminus_ring_stroke / 2
+        else:
+            radius = style.station_r + style.station_stroke / 2
+        return hypot(p[0] - q[0], p[1] - q[1]) <= radius
+
+    for line_id, abschnitte in sorted((direction_arrows or {}).items()):
+        if line_id not in flat_paths:
+            continue                      # Linie gibt es in dieser Karte nicht
+        pfad = flat_paths[line_id]
+        halte = line_layout.paths[line_id].stations
+        for von, nach in abschnitte:
+            if von not in halte or nach not in halte:
+                raise GeometryError(
+                    f"direction_arrows: {line_id} haelt nicht an "
+                    f"'{von}' und '{nach}'"
+                )
+            pa, pb = px(halte[von]), px(halte[nach])
+            strecke = hypot(pb[0] - pa[0], pb[1] - pa[1])
+            if strecke < 1e-9:
+                continue
+            ex, ey = (pb[0] - pa[0]) / strecke, (pb[1] - pa[1]) / strecke
+            # Das freie Stueck: von beiden Seiten aus dem Marker herauslaufen.
+            schritt = 0.25
+            t_a = 0.0
+            while t_a < strecke and marker_enthaelt(
+                    von, line_id, (pa[0] + ex * t_a, pa[1] + ey * t_a)):
+                t_a += schritt
+            t_b = strecke
+            while t_b > t_a and marker_enthaelt(
+                    nach, line_id, (pa[0] + ex * t_b, pa[1] + ey * t_b)):
+                t_b -= schritt
+            t_m = (t_a + t_b) / 2
+            mitte = (pa[0] + ex * t_m, pa[1] + ey * t_m)
+            # Auf die STRECKEN des Zuges projizieren, nicht auf seine
+            # Punkte: eine Gerade zwischen zwei Stationen hat keine
+            # Zwischenpunkte, der naechste Punkt waere sonst eine Station.
+            bester = None
+            for q0, q1 in zip(pfad, pfad[1:]):
+                dx_, dy_ = q1[0] - q0[0], q1[1] - q0[1]
+                l2 = dx_ * dx_ + dy_ * dy_
+                if l2 < 1e-12:
+                    continue
+                u = ((mitte[0] - q0[0]) * dx_ + (mitte[1] - q0[1]) * dy_) / l2
+                u = max(0.0, min(1.0, u))
+                q = (q0[0] + u * dx_, q0[1] + u * dy_)
+                abstand = hypot(q[0] - mitte[0], q[1] - mitte[1])
+                if bester is None or abstand < bester[0]:
+                    bester = (abstand, q, dx_, dy_)
+            if bester is None:
+                continue
+            _, (cx, cy), tx, ty = bester
+            laenge = hypot(tx, ty)
+            tx, ty = tx / laenge, ty / laenge
+            if tx * ex + ty * ey < 0:
+                tx, ty = -tx, -ty         # in Fahrtrichtung von -> nach
+            nx, ny = -ty, tx
+            # Die Grundseite steht quer zur Linie und ist um `arrow_overhang`
+            # je Seite breiter als sie; an der Spitze hat das Dreieck den
+            # Winkel `arrow_tip_angle`. Die Mitte zwischen Grundseite und
+            # Spitze liegt auf dem Punkt -- der selbst um `arrow_stagger`
+            # gegen die Fahrtrichtung rueckt: zwei gegenlaeufige Pfeile
+            # nebeneinander stehen so auseinander statt auf gleicher Hoehe.
+            halbwinkel = radians(style.arrow_tip_angle / 2)
+            pfeil_breite = style.highlight_line_width + 2 * style.arrow_overhang
+            pfeil_hoehe = pfeil_breite / 2 * cos(halbwinkel) / sin(halbwinkel)
+            cx, cy = cx - tx * style.arrow_stagger, cy - ty * style.arrow_stagger
+
+            def dreieck(mx: float, my: float) -> str:
+                sx, sy = mx + tx * pfeil_hoehe / 2, my + ty * pfeil_hoehe / 2
+                bx, by = mx - tx * pfeil_hoehe / 2, my - ty * pfeil_hoehe / 2
+                return (f"M{sx:.2f},{sy:.2f} "
+                        f"L{bx + nx * pfeil_breite / 2:.2f},"
+                        f"{by + ny * pfeil_breite / 2:.2f} "
+                        f"L{bx - nx * pfeil_breite / 2:.2f},"
+                        f"{by - ny * pfeil_breite / 2:.2f} Z")
+
+            # So weit vor, dass an beiden Flanken genau `arrow_edge` Weiss
+            # stehen bleibt -- unabhaengig davon, wie spitz der Pfeil ist.
+            pfeil_vor = style.arrow_edge / sin(halbwinkel)
+            svg.append(f'<path d="{dreieck(cx + tx * pfeil_vor, cy + ty * pfeil_vor)}" '
+                       f'fill="white"/>')
+            svg.append(f'<path d="{dreieck(cx, cy)}" '
+                       f'fill="{highlights[line_id]}"/>')
+
     # Hilfstrassen: die duennen grauen Mittellinien der Korridore, NACH den
     # Linien gezeichnet, damit sie von den breiten Linien nicht verdeckt
     # werden.
@@ -1141,6 +1250,42 @@ def build_track_svg(
             if zeigt not in terminates_at[sid]:
                 terminates_at[sid].append(zeigt)
 
+    # Zwischenenden: Stationen, an denen einzelne Zuggruppen einer Linie
+    # enden, die Linie selbst aber weiterfaehrt ("Wannsee <> Frohnau" auf der
+    # S1 Wannsee -- Oranienburg). Abgelesen aus den Zuggruppen der Legende
+    # (`TurnLine.groups`), damit Tabelle und Karte nicht auseinanderlaufen.
+    # Die Station bekommt dafuer ein umrandetes Signet, aber weder Ring noch
+    # Pille -- sie steht deshalb bewusst NICHT in `terminates_at`. Namen, die
+    # nicht auf der Linie liegen, bleiben ohne Signet; ein Knoten, der seine
+    # Pille bei einem Hub mitnutzt (`pill_with`), zeigt es an dessen Namen.
+    teilenden: Dict[str, List[str]] = defaultdict(list)
+    for line_id in sorted(highlights):
+        pline = layout.network.parsed[line_id]
+        linie = (legend_lines or {}).get(line_id)
+        if pline.closed or linie is None:
+            continue
+        zeigt = pline.branch_of or line_id
+        enden = set(_line_ends(pline))
+        auf_linie = {
+            stations[sid].name: sid for sid in pline.stations
+            if not stations[sid].hidden
+        }
+        for gruppe in linie.groups:
+            if "<>" not in gruppe.route:
+                continue                  # "Ringbahn in beide Richtungen"
+            # Nur Anfang und Ende zaehlen -- was dazwischen steht, ist ein
+            # Durchfahrtspunkt ("Zehlendorf <> Hbf <> Frohnau").
+            teile = gruppe.route.split("<>")
+            for name in (teile[0], teile[-1]):
+                sid = auf_linie.get(name.strip())
+                if sid is None or sid in enden:
+                    continue
+                ziel = stations[sid].pill_with or sid
+                if (zeigt in terminates_at.get(ziel, ())
+                        or zeigt in teilenden.get(ziel, ())):
+                    continue
+                teilenden[ziel].append(zeigt)
+
     def gross_markiert(station_id: str) -> bool:
         """Traegt die Station Pille oder Endstationsring statt nur Punkt?"""
         return stations[station_id].kind == "hub" or station_id in terminates_at
@@ -1186,7 +1331,7 @@ def build_track_svg(
         seiner groesseren tatsaechlichen Hoehe: so bleibt der weisse
         Zwischenraum zwischen Name und Tag auf Hoehe der Station.
         """
-        if station_id not in terminates_at:
+        if station_id not in terminates_at and station_id not in teilenden:
             return 0.0
         if abs(ax_) <= 0.3 or abs(ay_) > 0.3:
             return 0.0
@@ -1467,26 +1612,41 @@ def build_track_svg(
         "left": "right", "right": "left", "top": "bottom", "bottom": "top",
     }
 
-    for sid, ids in sorted(terminates_at.items()):
+    for sid in sorted(set(terminates_at) | set(teilenden)):
         if sid not in label_anchors:
             continue
+        # (Linie, umrandet?) -- vorn die Linien, die hier enden, dahinter
+        # die, von denen hier nur einzelne Zuggruppen enden.
+        ids = ([(l, False) for l in terminates_at.get(sid, ())]
+               + [(l, True) for l in teilenden.get(sid, ())])
         wunsch = badge_reihenfolge.get(sid)
         if wunsch:
             # Nicht genannte Linien haengen sich hinten an, statt zu
             # verschwinden -- eine spaeter dazukommende Linie faellt so auf,
             # ohne dass die Karte eine Plakette verliert.
-            ids = sorted(ids, key=lambda l: (
-                wunsch.index(l) if l in wunsch else len(wunsch), l
+            ids = sorted(ids, key=lambda e: (
+                e[1], wunsch.index(e[0]) if e[0] in wunsch else len(wunsch), e[0]
             ))
         lx, ly, anker, (ax_l, ay_l), oberkante = label_anchors[sid]
+        pos_l = max(
+            LABEL_DIRECTION,
+            key=lambda k: ax_l * LABEL_DIRECTION[k][0] + ay_l * LABEL_DIRECTION[k][1],
+        )
         # Gilt fuer jede Label-Lage, nicht nur fuer die Diagonalen: das Tag
-        # wandert auf die gegenueberliegende Seite der Station.
-        gegenseite = sid in opposite_corner_stations
+        # wandert auf die gegenueberliegende Seite der Station. An einer
+        # gewoehnlichen Station, die oben rechts beschriftet ist, ist das der
+        # Default -- unter dem Namen hinge das Tag dort meist auf der
+        # Strecke, die schraeg unter ihm weiterlaeuft (Lichtenrade,
+        # Wartenberg). Hubs bleiben davon ausgenommen: dort sitzt der Name an
+        # der Ecke der Pille und das Tag bewusst darunter (Westkreuz,
+        # Suedkreuz). Wer das Tag ueber dem Namen haben will (`badge_above`),
+        # behaelt das ebenfalls.
+        gegenseite = sid in opposite_corner_stations or (
+            pos_l == "top_right"
+            and stations[sid].kind != "hub"
+            and sid not in badge_above_stations
+        )
         if gegenseite:
-            pos_l = max(
-                LABEL_DIRECTION,
-                key=lambda k: ax_l * LABEL_DIRECTION[k][0] + ay_l * LABEL_DIRECTION[k][1],
-            )
             lx, ly, anker = anchor_for(sid, OPPOSITE_CORNER[pos_l])
             # Das Tag tritt an die Stelle einer Textzeile, also mittig zu
             # deren Grundlinie statt darunter.
@@ -1499,7 +1659,11 @@ def build_track_svg(
         if fein_b:
             lx += fein_b[0]
             oben += fein_b[1]
-        breiten = [badge_width(l, style) for l in ids]
+        # Das umrandete Signet ist rundum um `badge_outline_grow` groesser
+        # und nimmt in der Reihe entsprechend mehr Platz ein.
+        plus = style.badge_outline_grow
+        breiten = [badge_width(l, style) + (2 * plus if hohl else 0.0)
+                   for l, hohl in ids]
         gesamt = sum(breiten) + style.badge_gap * (len(ids) - 1)
         if anker == "middle":
             links = lx - gesamt / 2
@@ -1507,20 +1671,40 @@ def build_track_svg(
             links = lx - gesamt
         else:
             links = lx
-        for line_id, breite in zip(ids, breiten):
-            merke(links, oben, links + breite, oben + style.badge_height)
-            svg.append(
-                f'<rect x="{links:.1f}" y="{oben:.1f}" width="{breite:.1f}" '
-                f'height="{style.badge_height:.1f}" '
-                f'rx="{style.badge_height / 2:.1f}" '
-                f'ry="{style.badge_height / 2:.1f}" '
-                f'fill="{highlights[line_id]}"/>'
-            )
+        for (line_id, hohl), breite in zip(ids, breiten):
+            ueber = plus if hohl else 0.0
+            merke(links, oben - ueber, links + breite,
+                  oben + style.badge_height + ueber)
+            farbe = highlights[line_id]
+            if hohl:
+                # Umrandet: rundum um `plus` groesser als das volle Signet,
+                # der Rand liegt ganz innen. Die Mitte bleibt auf der Hoehe
+                # der vollen Signets -- die Reihe bleibt so buendig.
+                rand = style.badge_outline
+                hoehe_i = style.badge_height + 2 * plus - rand
+                svg.append(
+                    f'<rect x="{links + rand / 2:.2f}" y="{oben - plus + rand / 2:.2f}" '
+                    f'width="{breite - rand:.2f}" height="{hoehe_i:.2f}" '
+                    f'rx="{hoehe_i / 2:.2f}" ry="{hoehe_i / 2:.2f}" '
+                    f'fill="white" stroke="{farbe}" stroke-width="{rand}"/>'
+                )
+            else:
+                svg.append(
+                    f'<rect x="{links:.1f}" y="{oben:.1f}" width="{breite:.1f}" '
+                    f'height="{style.badge_height:.1f}" '
+                    f'rx="{style.badge_height / 2:.1f}" '
+                    f'ry="{style.badge_height / 2:.1f}" '
+                    f'fill="{farbe}"/>'
+                )
             svg.append(
                 f'<text x="{links + breite / 2:.1f}" '
                 f'y="{oben + style.badge_height / 2 + style.badge_font * 0.35:.1f}" '
-                f'font-size="{style.badge_font}" font-weight="500" fill="white" '
-                f'text-anchor="middle">{esc(badge_text(line_id))}</text>'
+                f'font-size="{style.badge_font}" font-weight="500" '
+                + (f'fill="{farbe}" stroke="{farbe}" '
+                   f'stroke-width="{style.badge_outline_text}" '
+                   f'stroke-linejoin="round" '
+                   if hohl else 'fill="white" ')
+                + f'text-anchor="middle">{esc(badge_text(line_id))}</text>'
             )
             links += breite + style.badge_gap
 

@@ -73,6 +73,14 @@
 <path d="M 315.857 769.347 L 327.043 758.161 L 327.570 757.651 L 328.113 757.159 L 328.672 756.685 L 329.246 756.229 L 329.835 755.792 L 330.438 755.375 L 331.054 754.978 L 331.682 754.601 L 332.323 754.245 L 332.975 753.910 L 333.638 753.597 L 334.310 753.305 L 334.992 753.036 L 335.682 752.789 L 335.836 752.739" fill="none" stroke="white" stroke-width="12.0" stroke-linecap="butt" stroke-linejoin="round"/>
 <path d="M 323.109 741.180 L 326.969 745.039 L 327.495 745.549 L 328.038 746.041 L 328.597 746.515 L 329.171 746.971 L 329.760 747.408 L 330.363 747.825 L 330.979 748.222 L 331.608 748.599 L 332.248 748.955 L 332.900 749.290 L 333.563 749.603 L 334.236 749.895 L 334.917 750.164 L 335.607 750.411 L 336.305 750.635 L 337.010 750.837 L 337.721 751.015 L 338.438 751.170 L 339.159 751.301 L 339.884 751.408 L 340.612 751.492 L 341.343 751.552 L 342.075 751.588 L 342.108 751.589" fill="none" stroke="#816DA6" stroke-width="8.0" stroke-linecap="butt" stroke-linejoin="round"/>
 <path d="M 315.857 769.347 L 327.043 758.161 L 327.570 757.651 L 328.113 757.159 L 328.672 756.685 L 329.246 756.229 L 329.835 755.792 L 330.438 755.375 L 331.054 754.978 L 331.682 754.601 L 332.323 754.245 L 332.975 753.910 L 333.638 753.597 L 334.310 753.305 L 334.992 753.036 L 335.682 752.789 L 335.836 752.739" fill="none" stroke="#816DA6" stroke-width="8.0" stroke-linecap="butt" stroke-linejoin="round"/>
+<path d="M399.84,825.60 L406.34,839.54 L393.34,839.54 Z" fill="white"/>
+<path d="M399.84,828.56 L406.34,842.49 L393.34,842.49 Z" fill="#AD5937"/>
+<path d="M1019.84,713.73 L1013.34,699.79 L1026.34,699.79 Z" fill="white"/>
+<path d="M1019.84,710.77 L1013.34,696.83 L1026.34,696.83 Z" fill="#AD5937"/>
+<path d="M387.84,825.45 L381.34,811.51 L394.34,811.51 Z" fill="white"/>
+<path d="M387.84,822.49 L381.34,808.56 L394.34,808.56 Z" fill="#CB6418"/>
+<path d="M1031.84,713.87 L1038.34,727.81 L1025.34,727.81 Z" fill="white"/>
+<path d="M1031.84,716.83 L1038.34,730.77 L1025.34,730.77 Z" fill="#CB6418"/>
 <circle cx="135.3" cy="1258.8" r="2.6" fill="white"/>
 <circle cx="240.5" cy="1242.7" r="2.6" fill="white"/>
 <circle cx="338.0" cy="1242.7" r="2.6" fill="white"/>
@@ -451,7 +459,7 @@
 <text x="721.0" y="67.0" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="end">Lehnitz</text>
 <text x="719.0" y="33.2" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="end">Oranienburg</text>
 <text x="684.6" y="572.6" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="middle">Wedding</text>
-<text x="625.6" y="600.2" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="end"><tspan x="625.6" dy="0.0">(Perlegerberger</tspan><tspan x="625.6" dy="11.5">Brücke)</tspan></text>
+<text x="625.6" y="600.2" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="end"><tspan x="625.6" dy="0.0">(Perleberger</tspan><tspan x="625.6" dy="11.5">Brücke)</tspan></text>
 <text x="664.6" y="731.1" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="end"><tspan x="664.6" dy="0.0">Haupt-</tspan><tspan x="664.6" dy="11.5">bahnhof</tspan></text>
 <text x="691.5" y="870.6" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="end"></text>
 <text x="935.1" y="1298.5" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="start">Blankenfelde</text>
@@ -500,7 +508,7 @@
 <text x="791.0" y="802.6" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="middle"><tspan x="791.0" dy="0.0">Hackescher</tspan><tspan x="791.0" dy="11.5">Markt</tspan></text>
 <text x="833.0" y="731.1" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="middle"><tspan x="833.0" dy="0.0">Alexander-</tspan><tspan x="833.0" dy="11.5">platz</tspan></text>
 <text x="875.0" y="802.6" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="middle"><tspan x="875.0" dy="0.0">Jannowitz-</tspan><tspan x="875.0" dy="11.5">brücke</tspan></text>
-<text x="917.0" y="742.6" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="middle">Ostbahnhof</text>
+<text x="917.0" y="724.6" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="middle">Ostbahnhof</text>
 <text x="959.0" y="802.6" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="middle"><tspan x="959.0" dy="0.0">Warschauer</tspan><tspan x="959.0" dy="11.5">Straße</tspan></text>
 <text x="1011.8" y="742.6" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="end">Ostkreuz</text>
 <text x="1136.0" y="802.5" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="start">Rummelsburg</text>
@@ -612,16 +620,30 @@
 <text x="1181.6" y="1342.7" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 85</text>
 <rect x="1199.6" y="1331.0" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#992746"/>
 <text x="1211.6" y="1342.7" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 9</text>
-<rect x="689.0" y="188.4" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#DA6BA2"/>
-<text x="704.0" y="200.1" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 15</text>
+<rect x="1358.78" y="923.35" width="23.00" height="14.00" rx="7.00" ry="7.00" fill="white" stroke="#0066AD" stroke-width="1.5"/>
+<text x="1370.3" y="934.6" font-size="12.0" font-weight="500" fill="#0066AD" stroke="#0066AD" stroke-width="0.3" stroke-linejoin="round" text-anchor="middle">S 3</text>
+<rect x="661.5" y="188.4" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#DA6BA2"/>
+<text x="676.5" y="200.1" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 15</text>
+<rect x="695.29" y="188.95" width="23.00" height="14.00" rx="7.00" ry="7.00" fill="white" stroke="#DA6BA2" stroke-width="1.5"/>
+<text x="706.8" y="200.1" font-size="12.0" font-weight="500" fill="#DA6BA2" stroke="#DA6BA2" stroke-width="0.3" stroke-linejoin="round" text-anchor="middle">S 1</text>
 <rect x="264.6" y="432.0" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#5FB4D3"/>
 <text x="276.6" y="443.7" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 6</text>
+<rect x="691.29" y="475.60" width="29.00" height="14.00" rx="7.00" ry="7.00" fill="white" stroke="#DA6BA2" stroke-width="1.5"/>
+<text x="705.8" y="486.8" font-size="12.0" font-weight="500" fill="#DA6BA2" stroke="#DA6BA2" stroke-width="0.3" stroke-linejoin="round" text-anchor="middle">S 15</text>
 <rect x="542.7" y="139.6" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#007734"/>
 <text x="557.7" y="151.3" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 26</text>
 <rect x="1513.7" y="1326.5" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#CD9C53"/>
 <text x="1528.7" y="1338.2" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 46</text>
+<rect x="848.19" y="1255.91" width="23.00" height="14.00" rx="7.00" ry="7.00" fill="white" stroke="#007734" stroke-width="1.5"/>
+<text x="859.7" y="1267.1" font-size="12.0" font-weight="500" fill="#007734" stroke="#007734" stroke-width="0.3" stroke-linejoin="round" text-anchor="middle">S 2</text>
+<rect x="1363.14" y="670.31" width="23.00" height="14.00" rx="7.00" ry="7.00" fill="white" stroke="#EC7405" stroke-width="1.5"/>
+<text x="1374.6" y="681.5" font-size="12.0" font-weight="500" fill="#EC7405" stroke="#EC7405" stroke-width="0.3" stroke-linejoin="round" text-anchor="middle">S 5</text>
 <rect x="695.0" y="37.2" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#DA6BA2"/>
 <text x="707.0" y="49.0" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 1</text>
+<rect x="888.79" y="729.10" width="23.00" height="14.00" rx="7.00" ry="7.00" fill="white" stroke="#0066AD" stroke-width="1.5"/>
+<text x="900.3" y="740.3" font-size="12.0" font-weight="500" fill="#0066AD" stroke="#0066AD" stroke-width="0.3" stroke-linejoin="round" text-anchor="middle">S 3</text>
+<rect x="916.29" y="729.10" width="29.00" height="14.00" rx="7.00" ry="7.00" fill="white" stroke="#816DA6" stroke-width="1.5"/>
+<text x="930.8" y="740.3" font-size="12.0" font-weight="500" fill="#816DA6" stroke="#816DA6" stroke-width="0.3" stroke-linejoin="round" text-anchor="middle">S 75</text>
 <rect x="-2.2" y="1346.6" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#816DA6"/>
 <text x="9.8" y="1358.3" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 7</text>
 <rect x="751.0" y="888.4" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#5FB4D3"/>
@@ -636,6 +658,8 @@
 <text x="683.0" y="1387.3" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 25</text>
 <rect x="701.0" y="1375.6" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#007734"/>
 <text x="716.0" y="1387.3" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 26</text>
+<rect x="1598.34" y="670.31" width="23.00" height="14.00" rx="7.00" ry="7.00" fill="white" stroke="#EC7405" stroke-width="1.5"/>
+<text x="1609.8" y="681.5" font-size="12.0" font-weight="500" fill="#EC7405" stroke="#EC7405" stroke-width="0.3" stroke-linejoin="round" text-anchor="middle">S 5</text>
 <rect x="1659.0" y="534.5" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#EC7405"/>
 <text x="1671.0" y="546.2" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 5</text>
 <rect x="703.0" y="1052.8" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#CD9C53"/>
@@ -644,6 +668,8 @@
 <text x="464.5" y="122.6" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 25</text>
 <rect x="119.5" y="1286.6" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#DA6BA2"/>
 <text x="131.5" y="1298.3" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 1</text>
+<rect x="947.54" y="818.60" width="23.00" height="14.00" rx="7.00" ry="7.00" fill="white" stroke="#EC7405" stroke-width="1.5"/>
+<text x="959.0" y="829.8" font-size="12.0" font-weight="500" fill="#EC7405" stroke="#EC7405" stroke-width="0.3" stroke-linejoin="round" text-anchor="middle">S 5</text>
 <rect x="1192.7" y="497.2" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#816DA6"/>
 <text x="1207.7" y="508.9" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 75</text>
 <rect x="335.8" y="620.8" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#CD9C53"/>
@@ -658,210 +684,210 @@
 <text x="-55.0" y="-99.0" font-size="10" font-weight="bold" fill="#111111" text-anchor="start">Linie</text>
 <text x="-15.0" y="-99.0" font-size="10" font-weight="bold" fill="#111111" text-anchor="start">Zuggruppe</text>
 <text x="79.9" y="-99.0" font-size="10" font-weight="bold" fill="#111111" text-anchor="start">Laufweg</text>
-<text x="254.3" y="-99.0" font-size="10" font-weight="bold" fill="#111111" text-anchor="start">Zugstärke</text>
-<line x1="-60.0" y1="-94.0" x2="333.8" y2="-94.0" stroke="#111111" stroke-width="0.8"/>
+<text x="270.2" y="-99.0" font-size="10" font-weight="bold" fill="#111111" text-anchor="start">Zugstärke</text>
+<line x1="-60.0" y1="-94.0" x2="349.7" y2="-94.0" stroke="#111111" stroke-width="0.8"/>
 <rect x="-55.0" y="-85.5" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#DA6BA2"/>
 <text x="-43.0" y="-73.8" font-size="12" font-weight="500" fill="white" text-anchor="middle">S 1</text>
 <text x="-15.0" y="-81.5" font-size="10" fill="#111111" text-anchor="start">Stammzuggruppe</text>
 <text x="79.9" y="-81.5" font-size="10" fill="#111111" text-anchor="start">Wannsee &lt;&gt; Oranienburg</text>
-<polygon points="258.8,-87.5 270.3,-87.5 270.3,-82.5 254.3,-82.5" fill="#111111"/>
-<polygon points="275.3,-87.5 286.8,-87.5 286.8,-82.5 270.8,-82.5" fill="#111111"/>
-<polygon points="291.8,-87.5 303.3,-87.5 303.3,-82.5 287.3,-82.5" fill="#111111"/>
-<polygon points="308.3,-87.5 319.8,-87.5 319.8,-82.5 303.8,-82.5" fill="#111111"/>
+<polygon points="274.7,-87.5 286.2,-87.5 286.2,-82.5 270.2,-82.5" fill="#111111"/>
+<polygon points="291.2,-87.5 302.7,-87.5 302.7,-82.5 286.7,-82.5" fill="#111111"/>
+<polygon points="307.7,-87.5 319.2,-87.5 319.2,-82.5 303.2,-82.5" fill="#111111"/>
+<polygon points="324.2,-87.5 335.7,-87.5 335.7,-82.5 319.7,-82.5" fill="#111111"/>
 <text x="-15.0" y="-67.5" font-size="10" fill="#111111" text-anchor="start">Tageszuggruppe</text>
 <text x="79.9" y="-67.5" font-size="10" fill="#111111" text-anchor="start">Wannsee &lt;&gt; Frohnau</text>
-<polygon points="258.8,-73.5 270.3,-73.5 270.3,-68.5 254.3,-68.5" fill="#111111"/>
-<polygon points="275.3,-73.5 286.8,-73.5 286.8,-68.5 270.8,-68.5" fill="#111111"/>
-<polygon points="291.8,-73.5 303.3,-73.5 303.3,-68.5 287.3,-68.5" fill="#111111"/>
-<polygon points="308.3,-73.5 319.8,-73.5 319.8,-68.5 303.8,-68.5" fill="#111111"/>
-<line x1="-60.0" y1="-62.0" x2="333.8" y2="-62.0" stroke="#111111" stroke-width="0.8"/>
+<polygon points="274.7,-73.5 286.2,-73.5 286.2,-68.5 270.2,-68.5" fill="#111111"/>
+<polygon points="291.2,-73.5 302.7,-73.5 302.7,-68.5 286.7,-68.5" fill="#111111"/>
+<polygon points="307.7,-73.5 319.2,-73.5 319.2,-68.5 303.2,-68.5" fill="#111111"/>
+<polygon points="324.2,-73.5 335.7,-73.5 335.7,-68.5 319.7,-68.5" fill="#111111"/>
+<line x1="-60.0" y1="-62.0" x2="349.7" y2="-62.0" stroke="#111111" stroke-width="0.8"/>
 <rect x="-55.0" y="-53.5" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#DA6BA2"/>
 <text x="-40.0" y="-41.8" font-size="12" font-weight="500" fill="white" text-anchor="middle">S 15</text>
 <text x="-15.0" y="-49.5" font-size="10" fill="#111111" text-anchor="start">Stammzuggruppe</text>
-<text x="79.9" y="-49.5" font-size="10" fill="#111111" text-anchor="start">Zehlendorf &lt;&gt; Frohnau</text>
-<polygon points="258.8,-55.5 270.3,-55.5 270.3,-50.5 254.3,-50.5" fill="#111111"/>
-<polygon points="275.3,-55.5 286.8,-55.5 286.8,-50.5 270.8,-50.5" fill="#111111"/>
-<polygon points="291.8,-55.5 303.3,-55.5 303.3,-50.5 287.3,-50.5" fill="#111111"/>
+<text x="79.9" y="-49.5" font-size="10" fill="#111111" text-anchor="start">Zehlendorf &lt;&gt; Hbf &lt;&gt; Frohnau</text>
+<polygon points="274.7,-55.5 286.2,-55.5 286.2,-50.5 270.2,-50.5" fill="#111111"/>
+<polygon points="291.2,-55.5 302.7,-55.5 302.7,-50.5 286.7,-50.5" fill="#111111"/>
+<polygon points="307.7,-55.5 319.2,-55.5 319.2,-50.5 303.2,-50.5" fill="#111111"/>
 <text x="-15.0" y="-35.5" font-size="10" fill="#111111" text-anchor="start">Tageszuggruppe</text>
-<text x="79.9" y="-35.5" font-size="10" fill="#111111" text-anchor="start">Zehlendorf &lt;&gt; Gesundbrunnen</text>
-<polygon points="258.8,-41.5 270.3,-41.5 270.3,-36.5 254.3,-36.5" fill="#111111"/>
-<polygon points="275.3,-41.5 286.8,-41.5 286.8,-36.5 270.8,-36.5" fill="#111111"/>
-<polygon points="291.8,-41.5 303.3,-41.5 303.3,-36.5 287.3,-36.5" fill="#111111"/>
-<line x1="-60.0" y1="-30.0" x2="333.8" y2="-30.0" stroke="#111111" stroke-width="0.8"/>
+<text x="79.9" y="-35.5" font-size="10" fill="#111111" text-anchor="start">Zehlendorf &lt;&gt; Hbf &lt;&gt; Gesundbrunnen</text>
+<polygon points="274.7,-41.5 286.2,-41.5 286.2,-36.5 270.2,-36.5" fill="#111111"/>
+<polygon points="291.2,-41.5 302.7,-41.5 302.7,-36.5 286.7,-36.5" fill="#111111"/>
+<polygon points="307.7,-41.5 319.2,-41.5 319.2,-36.5 303.2,-36.5" fill="#111111"/>
+<line x1="-60.0" y1="-30.0" x2="349.7" y2="-30.0" stroke="#111111" stroke-width="0.8"/>
 <rect x="-55.0" y="-21.5" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#007734"/>
 <text x="-43.0" y="-9.8" font-size="12" font-weight="500" fill="white" text-anchor="middle">S 2</text>
 <text x="-15.0" y="-17.5" font-size="10" fill="#111111" text-anchor="start">Stammzuggruppe</text>
 <text x="79.9" y="-17.5" font-size="10" fill="#111111" text-anchor="start">Blankenfelde &lt;&gt; Bernau</text>
-<polygon points="258.8,-23.5 270.3,-23.5 270.3,-18.5 254.3,-18.5" fill="#111111"/>
-<polygon points="275.3,-23.5 286.8,-23.5 286.8,-18.5 270.8,-18.5" fill="#111111"/>
-<polygon points="291.8,-23.5 303.3,-23.5 303.3,-18.5 287.3,-18.5" fill="#111111"/>
-<polygon points="308.3,-23.5 319.8,-23.5 319.8,-18.5 303.8,-18.5" fill="#111111"/>
+<polygon points="274.7,-23.5 286.2,-23.5 286.2,-18.5 270.2,-18.5" fill="#111111"/>
+<polygon points="291.2,-23.5 302.7,-23.5 302.7,-18.5 286.7,-18.5" fill="#111111"/>
+<polygon points="307.7,-23.5 319.2,-23.5 319.2,-18.5 303.2,-18.5" fill="#111111"/>
+<polygon points="324.2,-23.5 335.7,-23.5 335.7,-18.5 319.7,-18.5" fill="#111111"/>
 <text x="-15.0" y="-3.5" font-size="10" fill="#111111" text-anchor="start">Tageszuggruppe</text>
 <text x="79.9" y="-3.5" font-size="10" fill="#111111" text-anchor="start">Lichtenrade &lt;&gt; Bernau</text>
-<polygon points="258.8,-9.5 270.3,-9.5 270.3,-4.5 254.3,-4.5" fill="#111111"/>
-<polygon points="275.3,-9.5 286.8,-9.5 286.8,-4.5 270.8,-4.5" fill="#111111"/>
-<polygon points="291.8,-9.5 303.3,-9.5 303.3,-4.5 287.3,-4.5" fill="#111111"/>
-<polygon points="308.3,-9.5 319.8,-9.5 319.8,-4.5 303.8,-4.5" fill="#111111"/>
-<line x1="-60.0" y1="2.0" x2="333.8" y2="2.0" stroke="#111111" stroke-width="0.8"/>
+<polygon points="274.7,-9.5 286.2,-9.5 286.2,-4.5 270.2,-4.5" fill="#111111"/>
+<polygon points="291.2,-9.5 302.7,-9.5 302.7,-4.5 286.7,-4.5" fill="#111111"/>
+<polygon points="307.7,-9.5 319.2,-9.5 319.2,-4.5 303.2,-4.5" fill="#111111"/>
+<polygon points="324.2,-9.5 335.7,-9.5 335.7,-4.5 319.7,-4.5" fill="#111111"/>
+<line x1="-60.0" y1="2.0" x2="349.7" y2="2.0" stroke="#111111" stroke-width="0.8"/>
 <rect x="-55.0" y="3.5" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#007734"/>
 <text x="-40.0" y="15.2" font-size="12" font-weight="500" fill="white" text-anchor="middle">S 25</text>
 <text x="-15.0" y="14.5" font-size="10" fill="#111111" text-anchor="start">Stammzuggruppe</text>
-<text x="79.9" y="14.5" font-size="10" fill="#111111" text-anchor="start">Stahnsdorf &lt;&gt; Velten</text>
-<polygon points="258.8,8.5 270.3,8.5 270.3,13.5 254.3,13.5" fill="#111111"/>
-<polygon points="275.3,8.5 286.8,8.5 286.8,13.5 270.8,13.5" fill="#111111"/>
-<polygon points="291.8,8.5 303.3,8.5 303.3,13.5 287.3,13.5" fill="#111111"/>
-<line x1="-60.0" y1="20.0" x2="333.8" y2="20.0" stroke="#111111" stroke-width="0.8"/>
+<text x="79.9" y="14.5" font-size="10" fill="#111111" text-anchor="start">Stahnsdorf &lt;&gt; Hbf &lt;&gt; Velten</text>
+<polygon points="274.7,8.5 286.2,8.5 286.2,13.5 270.2,13.5" fill="#111111"/>
+<polygon points="291.2,8.5 302.7,8.5 302.7,13.5 286.7,13.5" fill="#111111"/>
+<polygon points="307.7,8.5 319.2,8.5 319.2,13.5 303.2,13.5" fill="#111111"/>
+<line x1="-60.0" y1="20.0" x2="349.7" y2="20.0" stroke="#111111" stroke-width="0.8"/>
 <rect x="-55.0" y="21.5" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#007734"/>
 <text x="-40.0" y="33.2" font-size="12" font-weight="500" fill="white" text-anchor="middle">S 26</text>
 <text x="-15.0" y="32.5" font-size="10" fill="#111111" text-anchor="start">Tageszuggruppe</text>
 <text x="79.9" y="32.5" font-size="10" fill="#111111" text-anchor="start">Stahnsdorf &lt;&gt; Hennigsdorf</text>
-<polygon points="258.8,26.5 270.3,26.5 270.3,31.5 254.3,31.5" fill="#111111"/>
-<polygon points="275.3,26.5 286.8,26.5 286.8,31.5 270.8,31.5" fill="#111111"/>
-<polygon points="291.8,26.5 303.3,26.5 303.3,31.5 287.3,31.5" fill="#111111"/>
-<line x1="-60.0" y1="38.0" x2="333.8" y2="38.0" stroke="#111111" stroke-width="0.8"/>
+<polygon points="274.7,26.5 286.2,26.5 286.2,31.5 270.2,31.5" fill="#111111"/>
+<polygon points="291.2,26.5 302.7,26.5 302.7,31.5 286.7,31.5" fill="#111111"/>
+<polygon points="307.7,26.5 319.2,26.5 319.2,31.5 303.2,31.5" fill="#111111"/>
+<line x1="-60.0" y1="38.0" x2="349.7" y2="38.0" stroke="#111111" stroke-width="0.8"/>
 <rect x="-55.0" y="53.5" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#0066AD"/>
 <text x="-43.0" y="65.2" font-size="12" font-weight="500" fill="white" text-anchor="middle">S 3</text>
 <text x="-15.0" y="50.5" font-size="10" fill="#111111" text-anchor="start">Stammzuggruppe</text>
 <text x="79.9" y="50.5" font-size="10" fill="#111111" text-anchor="start">Erkner &lt;&gt; Charlottenburg</text>
-<polygon points="258.8,44.5 270.3,44.5 270.3,49.5 254.3,49.5" fill="#111111"/>
-<polygon points="275.3,44.5 286.8,44.5 286.8,49.5 270.8,49.5" fill="#111111"/>
-<polygon points="291.8,44.5 303.3,44.5 303.3,49.5 287.3,49.5" fill="#111111"/>
-<polygon points="308.3,44.5 319.8,44.5 319.8,49.5 303.8,49.5" fill="#111111"/>
+<polygon points="274.7,44.5 286.2,44.5 286.2,49.5 270.2,49.5" fill="#111111"/>
+<polygon points="291.2,44.5 302.7,44.5 302.7,49.5 286.7,49.5" fill="#111111"/>
+<polygon points="307.7,44.5 319.2,44.5 319.2,49.5 303.2,49.5" fill="#111111"/>
+<polygon points="324.2,44.5 335.7,44.5 335.7,49.5 319.7,49.5" fill="#111111"/>
 <text x="-15.0" y="64.5" font-size="10" fill="#111111" text-anchor="start">Tageszuggruppe</text>
 <text x="79.9" y="64.5" font-size="10" fill="#111111" text-anchor="start">Erkner &lt;&gt; Charlottenburg</text>
-<polygon points="258.8,58.5 270.3,58.5 270.3,63.5 254.3,63.5" fill="#111111"/>
-<polygon points="275.3,58.5 286.8,58.5 286.8,63.5 270.8,63.5" fill="#111111"/>
-<polygon points="291.8,58.5 303.3,58.5 303.3,63.5 287.3,63.5" fill="#111111"/>
-<polygon points="308.3,58.5 319.8,58.5 319.8,63.5 303.8,63.5" fill="#111111"/>
+<polygon points="274.7,58.5 286.2,58.5 286.2,63.5 270.2,63.5" fill="#111111"/>
+<polygon points="291.2,58.5 302.7,58.5 302.7,63.5 286.7,63.5" fill="#111111"/>
+<polygon points="307.7,58.5 319.2,58.5 319.2,63.5 303.2,63.5" fill="#111111"/>
+<polygon points="324.2,58.5 335.7,58.5 335.7,63.5 319.7,63.5" fill="#111111"/>
 <text x="-15.0" y="78.5" font-size="10" fill="#111111" text-anchor="start">HVZ-Verstärker</text>
 <text x="79.9" y="78.5" font-size="10" fill="#111111" text-anchor="start">Friedrichshagen &lt;&gt; Ostbahnhof</text>
-<polygon points="258.8,72.5 270.3,72.5 270.3,77.5 254.3,77.5" fill="#111111"/>
-<polygon points="275.3,72.5 286.8,72.5 286.8,77.5 270.8,77.5" fill="#111111"/>
-<line x1="-60.0" y1="84.0" x2="333.8" y2="84.0" stroke="#111111" stroke-width="0.8"/>
+<polygon points="274.7,72.5 286.2,72.5 286.2,77.5 270.2,77.5" fill="#111111"/>
+<polygon points="291.2,72.5 302.7,72.5 302.7,77.5 286.7,77.5" fill="#111111"/>
+<line x1="-60.0" y1="84.0" x2="349.7" y2="84.0" stroke="#111111" stroke-width="0.8"/>
 <rect x="-55.0" y="86.0" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#AD5937"/>
 <text x="-40.0" y="97.7" font-size="12" font-weight="500" fill="white" text-anchor="middle">S 41</text>
 <rect x="-55.0" y="103.0" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#CB6418"/>
 <text x="-40.0" y="114.7" font-size="12" font-weight="500" fill="white" text-anchor="middle">S 42</text>
 <text x="-15.0" y="105.5" font-size="10" fill="#111111" text-anchor="start">Alle Zuggruppen</text>
 <text x="79.9" y="105.5" font-size="10" fill="#111111" text-anchor="start">Ringbahn in beide Richtungen</text>
-<polygon points="258.8,99.5 270.3,99.5 270.3,104.5 254.3,104.5" fill="#111111"/>
-<polygon points="275.3,99.5 286.8,99.5 286.8,104.5 270.8,104.5" fill="#111111"/>
-<polygon points="291.8,99.5 303.3,99.5 303.3,104.5 287.3,104.5" fill="#111111"/>
-<polygon points="308.3,99.5 319.8,99.5 319.8,104.5 303.8,104.5" fill="#111111"/>
-<line x1="-60.0" y1="120.0" x2="333.8" y2="120.0" stroke="#111111" stroke-width="0.8"/>
+<polygon points="274.7,99.5 286.2,99.5 286.2,104.5 270.2,104.5" fill="#111111"/>
+<polygon points="291.2,99.5 302.7,99.5 302.7,104.5 286.7,104.5" fill="#111111"/>
+<polygon points="307.7,99.5 319.2,99.5 319.2,104.5 303.2,104.5" fill="#111111"/>
+<polygon points="324.2,99.5 335.7,99.5 335.7,104.5 319.7,104.5" fill="#111111"/>
+<line x1="-60.0" y1="120.0" x2="349.7" y2="120.0" stroke="#111111" stroke-width="0.8"/>
 <rect x="-55.0" y="121.5" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#CD9C53"/>
 <text x="-40.0" y="133.2" font-size="12" font-weight="500" fill="white" text-anchor="middle">S 46</text>
 <text x="-15.0" y="132.5" font-size="10" fill="#111111" text-anchor="start">Stammzuggruppe</text>
 <text x="79.9" y="132.5" font-size="10" fill="#111111" text-anchor="start">Königs Wusterhausen &lt;&gt; Westend</text>
-<polygon points="258.8,126.5 270.3,126.5 270.3,131.5 254.3,131.5" fill="#111111"/>
-<polygon points="275.3,126.5 286.8,126.5 286.8,131.5 270.8,131.5" fill="#111111"/>
-<polygon points="291.8,126.5 303.3,126.5 303.3,131.5 287.3,131.5" fill="#111111"/>
-<polygon points="308.3,126.5 319.8,126.5 319.8,131.5 303.8,131.5" fill="#111111"/>
-<line x1="-60.0" y1="138.0" x2="333.8" y2="138.0" stroke="#111111" stroke-width="0.8"/>
+<polygon points="274.7,126.5 286.2,126.5 286.2,131.5 270.2,131.5" fill="#111111"/>
+<polygon points="291.2,126.5 302.7,126.5 302.7,131.5 286.7,131.5" fill="#111111"/>
+<polygon points="307.7,126.5 319.2,126.5 319.2,131.5 303.2,131.5" fill="#111111"/>
+<polygon points="324.2,126.5 335.7,126.5 335.7,131.5 319.7,131.5" fill="#111111"/>
+<line x1="-60.0" y1="138.0" x2="349.7" y2="138.0" stroke="#111111" stroke-width="0.8"/>
 <rect x="-55.0" y="139.5" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#CD9C53"/>
 <text x="-40.0" y="151.2" font-size="12" font-weight="500" fill="white" text-anchor="middle">S 47</text>
 <text x="-15.0" y="150.5" font-size="10" fill="#111111" text-anchor="start">Stammzuggruppe</text>
 <text x="79.9" y="150.5" font-size="10" fill="#111111" text-anchor="start">Spindlersfeld &lt;&gt; Südkreuz</text>
-<polygon points="258.8,144.5 270.3,144.5 270.3,149.5 254.3,149.5" fill="#111111"/>
-<polygon points="275.3,144.5 286.8,144.5 286.8,149.5 270.8,149.5" fill="#111111"/>
-<line x1="-60.0" y1="156.0" x2="333.8" y2="156.0" stroke="#111111" stroke-width="0.8"/>
+<polygon points="274.7,144.5 286.2,144.5 286.2,149.5 270.2,149.5" fill="#111111"/>
+<polygon points="291.2,144.5 302.7,144.5 302.7,149.5 286.7,149.5" fill="#111111"/>
+<line x1="-60.0" y1="156.0" x2="349.7" y2="156.0" stroke="#111111" stroke-width="0.8"/>
 <rect x="-55.0" y="178.5" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#EC7405"/>
 <text x="-43.0" y="190.2" font-size="12" font-weight="500" fill="white" text-anchor="middle">S 5</text>
 <text x="-15.0" y="168.5" font-size="10" fill="#111111" text-anchor="start">Stammzuggruppe</text>
 <text x="79.9" y="168.5" font-size="10" fill="#111111" text-anchor="start">Strausberg Nord &lt;&gt; Westkreuz</text>
-<polygon points="258.8,162.5 270.3,162.5 270.3,167.5 254.3,167.5" fill="#111111"/>
-<polygon points="275.3,162.5 286.8,162.5 286.8,167.5 270.8,167.5" fill="#111111"/>
-<polygon points="291.8,162.5 303.3,162.5 303.3,167.5 287.3,167.5" fill="#111111"/>
-<polygon points="308.3,162.5 319.8,162.5 319.8,167.5 303.8,167.5" fill="#111111"/>
+<polygon points="274.7,162.5 286.2,162.5 286.2,167.5 270.2,167.5" fill="#111111"/>
+<polygon points="291.2,162.5 302.7,162.5 302.7,167.5 286.7,167.5" fill="#111111"/>
+<polygon points="307.7,162.5 319.2,162.5 319.2,167.5 303.2,167.5" fill="#111111"/>
+<polygon points="324.2,162.5 335.7,162.5 335.7,167.5 319.7,167.5" fill="#111111"/>
 <text x="-15.0" y="182.5" font-size="10" fill="#111111" text-anchor="start">Tageszuggruppe</text>
 <text x="79.9" y="182.5" font-size="10" fill="#111111" text-anchor="start">Strausberg &lt;&gt; Westkreuz</text>
-<polygon points="258.8,176.5 270.3,176.5 270.3,181.5 254.3,181.5" fill="#111111"/>
-<polygon points="275.3,176.5 286.8,176.5 286.8,181.5 270.8,181.5" fill="#111111"/>
-<polygon points="291.8,176.5 303.3,176.5 303.3,181.5 287.3,181.5" fill="#111111"/>
-<polygon points="308.3,176.5 319.8,176.5 319.8,181.5 303.8,181.5" fill="#111111"/>
+<polygon points="274.7,176.5 286.2,176.5 286.2,181.5 270.2,181.5" fill="#111111"/>
+<polygon points="291.2,176.5 302.7,176.5 302.7,181.5 286.7,181.5" fill="#111111"/>
+<polygon points="307.7,176.5 319.2,176.5 319.2,181.5 303.2,181.5" fill="#111111"/>
+<polygon points="324.2,176.5 335.7,176.5 335.7,181.5 319.7,181.5" fill="#111111"/>
 <text x="-15.0" y="196.5" font-size="10" fill="#111111" text-anchor="start">HVZ-Verstärker</text>
 <text x="79.9" y="196.5" font-size="10" fill="#111111" text-anchor="start">Mahlsdorf &lt;&gt; Warschauer Straße</text>
-<polygon points="258.8,190.5 270.3,190.5 270.3,195.5 254.3,195.5" fill="#111111"/>
-<polygon points="275.3,190.5 286.8,190.5 286.8,195.5 270.8,195.5" fill="#111111"/>
+<polygon points="274.7,190.5 286.2,190.5 286.2,195.5 270.2,195.5" fill="#111111"/>
+<polygon points="291.2,190.5 302.7,190.5 302.7,195.5 286.7,195.5" fill="#111111"/>
 <text x="-15.0" y="210.5" font-size="10" fill="#111111" text-anchor="start">HVZ-Verstärker</text>
 <text x="79.9" y="210.5" font-size="10" fill="#111111" text-anchor="start">Mahlsdorf &lt;&gt; Warschauer Straße</text>
-<polygon points="258.8,204.5 270.3,204.5 270.3,209.5 254.3,209.5" fill="#111111"/>
-<polygon points="275.3,204.5 286.8,204.5 286.8,209.5 270.8,209.5" fill="#111111"/>
-<line x1="-60.0" y1="216.0" x2="333.8" y2="216.0" stroke="#111111" stroke-width="0.8"/>
+<polygon points="274.7,204.5 286.2,204.5 286.2,209.5 270.2,209.5" fill="#111111"/>
+<polygon points="291.2,204.5 302.7,204.5 302.7,209.5 286.7,209.5" fill="#111111"/>
+<line x1="-60.0" y1="216.0" x2="349.7" y2="216.0" stroke="#111111" stroke-width="0.8"/>
 <rect x="-55.0" y="224.5" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#5FB4D3"/>
 <text x="-43.0" y="236.2" font-size="12" font-weight="500" fill="white" text-anchor="middle">S 6</text>
 <text x="-15.0" y="228.5" font-size="10" fill="#111111" text-anchor="start">Stammzuggruppe</text>
 <text x="79.9" y="228.5" font-size="10" fill="#111111" text-anchor="start">Gartenfeld &lt;&gt; Potsdamer Platz</text>
-<polygon points="258.8,222.5 270.3,222.5 270.3,227.5 254.3,227.5" fill="#111111"/>
-<polygon points="275.3,222.5 286.8,222.5 286.8,227.5 270.8,227.5" fill="#111111"/>
-<polygon points="291.8,222.5 303.3,222.5 303.3,227.5 287.3,227.5" fill="#111111"/>
+<polygon points="274.7,222.5 286.2,222.5 286.2,227.5 270.2,227.5" fill="#111111"/>
+<polygon points="291.2,222.5 302.7,222.5 302.7,227.5 286.7,227.5" fill="#111111"/>
+<polygon points="307.7,222.5 319.2,222.5 319.2,227.5 303.2,227.5" fill="#111111"/>
 <text x="-15.0" y="242.5" font-size="10" fill="#111111" text-anchor="start">Tageszuggruppe</text>
 <text x="79.9" y="242.5" font-size="10" fill="#111111" text-anchor="start">Gartenfeld &lt;&gt; Potsdamer Platz</text>
-<polygon points="258.8,236.5 270.3,236.5 270.3,241.5 254.3,241.5" fill="#111111"/>
-<polygon points="275.3,236.5 286.8,236.5 286.8,241.5 270.8,241.5" fill="#111111"/>
-<polygon points="291.8,236.5 303.3,236.5 303.3,241.5 287.3,241.5" fill="#111111"/>
-<line x1="-60.0" y1="248.0" x2="333.8" y2="248.0" stroke="#111111" stroke-width="0.8"/>
+<polygon points="274.7,236.5 286.2,236.5 286.2,241.5 270.2,241.5" fill="#111111"/>
+<polygon points="291.2,236.5 302.7,236.5 302.7,241.5 286.7,241.5" fill="#111111"/>
+<polygon points="307.7,236.5 319.2,236.5 319.2,241.5 303.2,241.5" fill="#111111"/>
+<line x1="-60.0" y1="248.0" x2="349.7" y2="248.0" stroke="#111111" stroke-width="0.8"/>
 <rect x="-55.0" y="256.5" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#816DA6"/>
 <text x="-43.0" y="268.2" font-size="12" font-weight="500" fill="white" text-anchor="middle">S 7</text>
 <text x="-15.0" y="260.5" font-size="10" fill="#111111" text-anchor="start">Stammzuggruppe</text>
 <text x="79.9" y="260.5" font-size="10" fill="#111111" text-anchor="start">Ahrensfelde &lt;&gt; Potsdam Hbf</text>
-<polygon points="258.8,254.5 270.3,254.5 270.3,259.5 254.3,259.5" fill="#111111"/>
-<polygon points="275.3,254.5 286.8,254.5 286.8,259.5 270.8,259.5" fill="#111111"/>
-<polygon points="291.8,254.5 303.3,254.5 303.3,259.5 287.3,259.5" fill="#111111"/>
-<polygon points="308.3,254.5 319.8,254.5 319.8,259.5 303.8,259.5" fill="#111111"/>
+<polygon points="274.7,254.5 286.2,254.5 286.2,259.5 270.2,259.5" fill="#111111"/>
+<polygon points="291.2,254.5 302.7,254.5 302.7,259.5 286.7,259.5" fill="#111111"/>
+<polygon points="307.7,254.5 319.2,254.5 319.2,259.5 303.2,259.5" fill="#111111"/>
+<polygon points="324.2,254.5 335.7,254.5 335.7,259.5 319.7,259.5" fill="#111111"/>
 <text x="-15.0" y="274.5" font-size="10" fill="#111111" text-anchor="start">Tageszuggruppe</text>
 <text x="79.9" y="274.5" font-size="10" fill="#111111" text-anchor="start">Ahrensfelde &lt;&gt; Potsdam Hbf</text>
-<polygon points="258.8,268.5 270.3,268.5 270.3,273.5 254.3,273.5" fill="#111111"/>
-<polygon points="275.3,268.5 286.8,268.5 286.8,273.5 270.8,273.5" fill="#111111"/>
-<polygon points="291.8,268.5 303.3,268.5 303.3,273.5 287.3,273.5" fill="#111111"/>
-<polygon points="308.3,268.5 319.8,268.5 319.8,273.5 303.8,273.5" fill="#111111"/>
-<line x1="-60.0" y1="280.0" x2="333.8" y2="280.0" stroke="#111111" stroke-width="0.8"/>
+<polygon points="274.7,268.5 286.2,268.5 286.2,273.5 270.2,273.5" fill="#111111"/>
+<polygon points="291.2,268.5 302.7,268.5 302.7,273.5 286.7,273.5" fill="#111111"/>
+<polygon points="307.7,268.5 319.2,268.5 319.2,273.5 303.2,273.5" fill="#111111"/>
+<polygon points="324.2,268.5 335.7,268.5 335.7,273.5 319.7,273.5" fill="#111111"/>
+<line x1="-60.0" y1="280.0" x2="349.7" y2="280.0" stroke="#111111" stroke-width="0.8"/>
 <rect x="-55.0" y="288.5" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#816DA6"/>
 <text x="-40.0" y="300.2" font-size="12" font-weight="500" fill="white" text-anchor="middle">S 75</text>
 <text x="-15.0" y="292.5" font-size="10" fill="#111111" text-anchor="start">Stammzuggruppe</text>
 <text x="79.9" y="292.5" font-size="10" fill="#111111" text-anchor="start">Wartenberg &lt;&gt; Spandau</text>
-<polygon points="258.8,286.5 270.3,286.5 270.3,291.5 254.3,291.5" fill="#111111"/>
-<polygon points="275.3,286.5 286.8,286.5 286.8,291.5 270.8,291.5" fill="#111111"/>
-<polygon points="291.8,286.5 303.3,286.5 303.3,291.5 287.3,291.5" fill="#111111"/>
-<polygon points="308.3,286.5 319.8,286.5 319.8,291.5 303.8,291.5" fill="#111111"/>
+<polygon points="274.7,286.5 286.2,286.5 286.2,291.5 270.2,291.5" fill="#111111"/>
+<polygon points="291.2,286.5 302.7,286.5 302.7,291.5 286.7,291.5" fill="#111111"/>
+<polygon points="307.7,286.5 319.2,286.5 319.2,291.5 303.2,291.5" fill="#111111"/>
+<polygon points="324.2,286.5 335.7,286.5 335.7,291.5 319.7,291.5" fill="#111111"/>
 <text x="-15.0" y="306.5" font-size="10" fill="#111111" text-anchor="start">Tageszuggruppe</text>
 <text x="79.9" y="306.5" font-size="10" fill="#111111" text-anchor="start">Wartenberg &lt;&gt; Ostbahnhof</text>
-<polygon points="258.8,300.5 270.3,300.5 270.3,305.5 254.3,305.5" fill="#111111"/>
-<polygon points="275.3,300.5 286.8,300.5 286.8,305.5 270.8,305.5" fill="#111111"/>
-<line x1="-60.0" y1="312.0" x2="333.8" y2="312.0" stroke="#111111" stroke-width="0.8"/>
+<polygon points="274.7,300.5 286.2,300.5 286.2,305.5 270.2,305.5" fill="#111111"/>
+<polygon points="291.2,300.5 302.7,300.5 302.7,305.5 286.7,305.5" fill="#111111"/>
+<line x1="-60.0" y1="312.0" x2="349.7" y2="312.0" stroke="#111111" stroke-width="0.8"/>
 <rect x="-55.0" y="313.5" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#66AA22"/>
 <text x="-43.0" y="325.2" font-size="12" font-weight="500" fill="white" text-anchor="middle">S 8</text>
 <text x="-15.0" y="324.5" font-size="10" fill="#111111" text-anchor="start">Stammzuggruppe</text>
-<text x="79.9" y="324.5" font-size="10" fill="#111111" text-anchor="start">Wildau &lt;&gt; Hohen Neuendorf</text>
-<polygon points="258.8,318.5 270.3,318.5 270.3,323.5 254.3,323.5" fill="#111111"/>
-<polygon points="275.3,318.5 286.8,318.5 286.8,323.5 270.8,323.5" fill="#111111"/>
-<polygon points="291.8,318.5 303.3,318.5 303.3,323.5 287.3,323.5" fill="white" stroke="#111111" stroke-width="1.0"/>
-<polygon points="308.3,318.5 319.8,318.5 319.8,323.5 303.8,323.5" fill="white" stroke="#111111" stroke-width="1.0"/>
-<text x="322.3" y="324.5" font-size="9" fill="#111111" text-anchor="start">*</text>
-<line x1="-60.0" y1="330.0" x2="333.8" y2="330.0" stroke="#111111" stroke-width="0.8"/>
+<text x="79.9" y="324.5" font-size="10" fill="#111111" text-anchor="start">Wildau &lt;&gt; Birkenwerder</text>
+<polygon points="274.7,318.5 286.2,318.5 286.2,323.5 270.2,323.5" fill="#111111"/>
+<polygon points="291.2,318.5 302.7,318.5 302.7,323.5 286.7,323.5" fill="#111111"/>
+<polygon points="307.7,318.5 319.2,318.5 319.2,323.5 303.2,323.5" fill="white" stroke="#111111" stroke-width="1.0"/>
+<polygon points="324.2,318.5 335.7,318.5 335.7,323.5 319.7,323.5" fill="white" stroke="#111111" stroke-width="1.0"/>
+<text x="338.2" y="324.5" font-size="9" fill="#111111" text-anchor="start">*</text>
+<line x1="-60.0" y1="330.0" x2="349.7" y2="330.0" stroke="#111111" stroke-width="0.8"/>
 <rect x="-55.0" y="331.5" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#66AA22"/>
 <text x="-40.0" y="343.2" font-size="12" font-weight="500" fill="white" text-anchor="middle">S 85</text>
 <text x="-15.0" y="342.5" font-size="10" fill="#111111" text-anchor="start">Stammzuggruppe</text>
 <text x="79.9" y="342.5" font-size="10" fill="#111111" text-anchor="start">Flughafen BER &lt;&gt; Buch</text>
-<polygon points="258.8,336.5 270.3,336.5 270.3,341.5 254.3,341.5" fill="#111111"/>
-<polygon points="275.3,336.5 286.8,336.5 286.8,341.5 270.8,341.5" fill="#111111"/>
-<polygon points="291.8,336.5 303.3,336.5 303.3,341.5 287.3,341.5" fill="#111111"/>
-<polygon points="308.3,336.5 319.8,336.5 319.8,341.5 303.8,341.5" fill="#111111"/>
-<line x1="-60.0" y1="348.0" x2="333.8" y2="348.0" stroke="#111111" stroke-width="0.8"/>
+<polygon points="274.7,336.5 286.2,336.5 286.2,341.5 270.2,341.5" fill="#111111"/>
+<polygon points="291.2,336.5 302.7,336.5 302.7,341.5 286.7,341.5" fill="#111111"/>
+<polygon points="307.7,336.5 319.2,336.5 319.2,341.5 303.2,341.5" fill="#111111"/>
+<polygon points="324.2,336.5 335.7,336.5 335.7,341.5 319.7,341.5" fill="#111111"/>
+<line x1="-60.0" y1="348.0" x2="349.7" y2="348.0" stroke="#111111" stroke-width="0.8"/>
 <rect x="-55.0" y="349.5" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#992746"/>
 <text x="-43.0" y="361.2" font-size="12" font-weight="500" fill="white" text-anchor="middle">S 9</text>
 <text x="-15.0" y="360.5" font-size="10" fill="#111111" text-anchor="start">Stammzuggruppe</text>
 <text x="79.9" y="360.5" font-size="10" fill="#111111" text-anchor="start">Flughafen BER &lt;&gt; Spandau</text>
-<polygon points="258.8,354.5 270.3,354.5 270.3,359.5 254.3,359.5" fill="#111111"/>
-<polygon points="275.3,354.5 286.8,354.5 286.8,359.5 270.8,359.5" fill="#111111"/>
-<polygon points="291.8,354.5 303.3,354.5 303.3,359.5 287.3,359.5" fill="#111111"/>
-<polygon points="308.3,354.5 319.8,354.5 319.8,359.5 303.8,359.5" fill="#111111"/>
-<line x1="-60.0" y1="366.0" x2="333.8" y2="366.0" stroke="#111111" stroke-width="0.8"/>
+<polygon points="274.7,354.5 286.2,354.5 286.2,359.5 270.2,359.5" fill="#111111"/>
+<polygon points="291.2,354.5 302.7,354.5 302.7,359.5 286.7,359.5" fill="#111111"/>
+<polygon points="307.7,354.5 319.2,354.5 319.2,359.5 303.2,359.5" fill="#111111"/>
+<polygon points="324.2,354.5 335.7,354.5 335.7,359.5 319.7,359.5" fill="#111111"/>
+<line x1="-60.0" y1="366.0" x2="349.7" y2="366.0" stroke="#111111" stroke-width="0.8"/>
 <line x1="-20.0" y1="-112.0" x2="-20.0" y2="366.0" stroke="#111111" stroke-width="0.8"/>
 <line x1="74.9" y1="-112.0" x2="74.9" y2="366.0" stroke="#111111" stroke-width="0.8"/>
-<line x1="249.3" y1="-112.0" x2="249.3" y2="366.0" stroke="#111111" stroke-width="0.8"/>
-<text x="-15.0" y="379.0" font-size="9" fill="#111111" text-anchor="start">* Blankenburg &lt;&gt; Hohen Neuendorf</text>
-<polygon points="258.8,372.5 270.3,372.5 270.3,377.5 254.3,377.5" fill="#111111"/>
-<polygon points="275.3,372.5 286.8,372.5 286.8,377.5 270.8,377.5" fill="#111111"/>
+<line x1="265.2" y1="-112.0" x2="265.2" y2="366.0" stroke="#111111" stroke-width="0.8"/>
+<text x="-15.0" y="379.0" font-size="9" fill="#111111" text-anchor="start">* Blankenburg &lt;&gt; Birkenwerder</text>
+<polygon points="274.7,372.5 286.2,372.5 286.2,377.5 270.2,377.5" fill="#111111"/>
+<polygon points="291.2,372.5 302.7,372.5 302.7,377.5 286.7,377.5" fill="#111111"/>
 </g>
 </svg>

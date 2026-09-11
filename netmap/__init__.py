@@ -184,6 +184,12 @@ class Net:
                              `crossing_over` meint das LINIEN, nicht
                              Familien -- innerhalb einer Familie ist das der
                              einzige Unterschied
+    direction_arrows         Linie -> Abschnitte (von, nach), auf denen ein
+                             Richtungspfeil in der Linie steht: mittig
+                             zwischen den beiden Stationen, auf der Spur der
+                             Linie, zeigend von der ersten zur zweiten. Fuer
+                             die Ringbahn, deren Fahrtrichtung sonst nirgends
+                             zu sehen ist
     badge_above              Stationen, an denen die Signetreihe UEBER dem
                              Namen steht statt darunter -- fuer Bahnhoefe,
                              an denen so viele Linien enden, dass die Reihe
@@ -211,6 +217,9 @@ class Net:
     badge_order: Mapping[str, Tuple[str, ...]] = field(default_factory=dict)
     crossing_over: Mapping[str, Tuple[str, ...]] = field(default_factory=dict)
     draw_over: Mapping[str, Tuple[str, ...]] = field(default_factory=dict)
+    direction_arrows: Mapping[str, Tuple[Tuple[str, str], ...]] = field(
+        default_factory=dict
+    )
     legend_at: Optional[Tuple[float, Optional[float]]] = None
 
     def __post_init__(self) -> None:
@@ -267,6 +276,7 @@ class Net:
         badge_order: Optional[Mapping[str, Any]] = None,
         crossing_over: Optional[Mapping[str, Any]] = None,
         draw_over: Optional[Mapping[str, Any]] = None,
+        direction_arrows: Optional[Mapping[str, Any]] = None,
         groups: Optional[Mapping[str, Sequence[TrainGroup]]] = None,
         legend_at=None,
     ) -> "Net":
@@ -326,6 +336,9 @@ class Net:
                 self.crossing_over, crossing_over, "crossing_over"
             ),
             draw_over=_merge_map(self.draw_over, draw_over, "draw_over"),
+            direction_arrows=_merge_map(
+                self.direction_arrows, direction_arrows, "direction_arrows"
+            ),
             legend_at=(
                 self.legend_at if legend_at is None
                 else None if isinstance(legend_at, _Remove)
@@ -377,6 +390,7 @@ def render_svg(
         badge_order=net.badge_order,
         crossing_over=net.crossing_over,
         draw_over=net.draw_over,
+        direction_arrows=net.direction_arrows,
         label_offsets=net.label_offsets,
         badge_offsets=net.badge_offsets,
         legend_at=net.legend_at,

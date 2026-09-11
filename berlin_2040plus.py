@@ -171,13 +171,10 @@ _S75_GERADE: List[Step] = [
 #
 # Der Tunnel geht ueber den Potsdamer Platz hinaus: Gleisdreieck, Yorckstrasse
 # (Grossgoerschenstrasse), Julius-Leber-Bruecke -- bis hierher die Trasse der
-# S1 -- und dann ueber die Cheruskerkurve auf den Suedring. Ab Schoeneberg
-# faehrt die S6 den Weg der S46 bis Koenigs Wusterhausen.
-#
-# Der Knick auf den Ring sitzt GENAU im Bahnhof Schoeneberg: `FixPath(0.0)`
-# laesst dem Bein davor keine Laenge. Nur so laesst sich hier abbiegen,
-# obwohl beide Nachbarkanten geradeaus fahrenden Linien gehoeren -- der S1
-# auf der Wannseebahn und den Ringlinien nach Suedkreuz.
+# S1 -- und dann ueber die Cheruskerkurve auf den Suedring. Die Kurve trifft
+# den Ring zwischen Schoeneberg und Suedkreuz, Schoeneberg selbst liegt nicht
+# daran (siehe `_BA3`). Ab Suedkreuz faehrt die S6 den Weg der S46 bis Koenigs
+# Wusterhausen.
 # ============================================================================
 # NORD-SUED-TUNNEL -- schnurgerade durch den Potsdamer Platz
 # ============================================================================
@@ -223,11 +220,12 @@ _ANHALTER_YORCK = 2.8     # Hoechstabstand Anhalter Bahnhof <-> Yorckstrasse
 # Wert gehoert der Trassenmitte, die beiden anderen sind die Boegen, die S15
 # und S25 dort wirklich zeichnen (siehe `hbf_zulauf_wedding`).
 _WEDDING_RADIUS = 0.4     # Trassenmitte
-_WEDDING_RADIUS_S15 = 0.8 # aussen: weiter Bogen
-_WEDDING_RADIUS_S25 = 0.5 # innen: enger Bogen
+_WEDDING_RADIUS_S15 = 0.9 # aussen: weiter Bogen
+_WEDDING_RADIUS_S25 = 0.4 # innen: Standard fuer 135 Grad
 
 # Radius der Cheruskerkurve -- je spitzer (kleiner), desto knapper der Bogen.
-_CHERUSKER_RADIUS = 0.5
+# Wie ueberall bei 135 Grad der Standard (`CFG.netz.curve_radius_135`).
+_CHERUSKER_RADIUS = 0.4
 
 # Mindestabstand Julius-Leber-Bruecke <-> Schoeneberg: das erste Bein der
 # Cheruskerkurve (vor dem Turn) bekommt diese explizite Mindestlaenge, statt
@@ -518,7 +516,7 @@ BA3_CORRIDORS: Dict[str, Corridor] = {
         # (`hbf_zulauf_*`), damit er nicht erst im Knick an der Perleberger
         # Bruecke stattfindet: eine Spur wechselt immer erst in der naechsten
         # Kurve, und dort waeren S6 und S15 sichtbar uebereinander gestiegen.
-        steps=["perlegerberger_bruecke", "hauptbahnhof", "potsdamer_platz_city",
+        steps=["perleberger_bruecke", "hauptbahnhof", "potsdamer_platz_city",
                "gleisdreieck", "yorckstrasse_grossgoerschenstrasse"],
         offsets={"S6": 0.0, "S25": -1.0, "S15": 1.0},
     ),
@@ -588,9 +586,9 @@ BA3_CORRIDORS: Dict[str, Corridor] = {
         # links und rechts der S6 liegen, brauchen beide +1.0.
         offsets={"S15": 1.0, "S25": 1.0},
     ),
-    # Auf "perlegerberger_bruecke" -> "hauptbahnhof" gewinnt spaeter
+    # Auf "perleberger_bruecke" -> "hauptbahnhof" gewinnt spaeter
     # `potsdamer_platz_ast` (S25 hier also ohne Wirkung); auf "westhafen" ->
-    # "perlegerberger_bruecke" gilt dieser Korridor aber wirklich -- die S6
+    # "perleberger_bruecke" gilt dieser Korridor aber wirklich -- die S6
     # bekommt deshalb schon hier ihren Wert 0.0 (seit dem Tausch mit der S15
     # die Mitte), sonst haelt der Wechsel bei Perleberger Bruecke nur zur
     # Haelfte.
@@ -848,7 +846,7 @@ GROUPS: Dict[str, List[TrainGroup]] = {
 # faehrt die Haelfte davon, siehe die Fussnote unter der Tabelle.
 GROUPS["S75"] = [
     TrainGroup("Stammzuggruppe", "Birkenwerder <> Charlottenburg", 4,
-               hollow=2, note="Bucher Straße <> Hohen Neuendorf",
+               hollow=2, note="Bucher Straße <> Birkenwerder",
                note_cars=2),
     TrainGroup("Tageszuggruppe", "Wartenberg <> Ostbahnhof", 2),
 ]

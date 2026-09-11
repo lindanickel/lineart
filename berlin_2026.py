@@ -243,6 +243,16 @@ DRAW_OVER: Dict[str, Sequence[str]] = {
     "S25": ("S2", "S26"),
 }
 
+# Fahrtrichtung der Ringbahn: die S41 faehrt im Uhrzeigersinn, die S42
+# dagegen. Je ein Pfeil auf der West- und der Ostseite, gerichtet von der
+# ersten zur zweiten Station -- im Westen geht es im Uhrzeigersinn nach
+# Norden (Halensee -> Westkreuz), im Osten nach Sueden (Frankfurter Allee ->
+# Ostkreuz).
+DIRECTION_ARROWS: Dict[str, Sequence[Sequence[str]]] = {
+    "S41": (("halensee", "westkreuz"), ("frankfurter_allee", "ostkreuz")),
+    "S42": (("westkreuz", "halensee"), ("ostkreuz", "frankfurter_allee")),
+}
+
 def _slice(corridor: Sequence[Step], start_name: str, end_name: str) -> List[Step]:
     """Schneidet ein Streckenstueck zwischen zwei Stationsnamen aus (beide
     Enden inklusive) -- samt aller dazwischenliegenden Turn()/FlexPath().
@@ -698,6 +708,9 @@ LABEL_NUDGE: Dict[str, Pt] = {
     "westkreuz": (0.0, -18.0),
     "gesundbrunnen": (0.0, -18.0),
     "hauptbahnhof": (0.0, -18.0),
+    # Am Ostbahnhof enden Verstaerker von S3 und S5 (umrandete Signets):
+    # dieselbe Lage ueber der Stadtbahn, derselbe Lift.
+    "ostbahnhof": (0.0, -18.0),
     # Blankenburg und Pankow tragen ihr Tag ganz normal unter dem Namen.
     # Beides zusammen rueckt ein Stueck nach rechts oben, weg von der
     # schraegen Stettiner Bahn, an der es sonst klebt. Der Versatz gilt nur,
@@ -709,6 +722,10 @@ LABEL_NUDGE: Dict[str, Pt] = {
     # Schoeneberg und rueckt ein Stueck nach links unten, weg von der
     # zweizeiligen Yorckstrasse darueber.
     "julius_leber_bruecke": (-5.0, 5.0),
+    # Buch traegt ein umrandetes Signet: dort enden die Tageszuege der S2.
+    # Wie bei Blankenburg und Pankow haengt es unter dem Namen, und beides
+    # rueckt zusammen nach rechts oben -- sonst stiesse es an Karow.
+    "buch": (7.0, -7.0),
 }
 
 BADGE_NUDGE: Dict[str, Pt] = {
@@ -1241,8 +1258,8 @@ GROUPS: Dict[str, List[TrainGroup]] = {
     # Viertelzug steht deshalb nur umrandet in der Tabelle, und die Fussnote
     # darunter sagt, wo er fehlt.
     "S8": [
-        _stamm("Wildau <> Hohen Neuendorf", 3, hollow=1,
-               note="Blankenburg <> Hohen Neuendorf", note_cars=2),
+        _stamm("Wildau <> Birkenwerder", 3, hollow=1,
+               note="Blankenburg <> Birkenwerder", note_cars=2),
     ],
     "S85": [_stamm("Flughafen BER <> Frohnau", 3)],
     "S9": [_stamm("Flughafen BER <> Spandau")],
@@ -1265,6 +1282,7 @@ NET = Net(
     badge_offsets=BADGE_NUDGE,
     badge_opposite_corner=BADGE_OPPOSITE_CORNER,
     draw_over=DRAW_OVER,
+    direction_arrows=DIRECTION_ARROWS,
     # Linke Kante der Zuggruppen-Tabelle, in Kartenkoordinaten: links
     # oben, neben dem Nordwesten der Karte. Die Hoehe bleibt offen (None)
     # -- dann haengt die Tabelle so tief, wie ihre Spalte es zulaesst, und

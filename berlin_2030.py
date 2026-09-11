@@ -56,8 +56,8 @@ SIEMENSBAHN_STATIONS: List[Station] = [
     Station("wernerwerk", "Wernerwerk"),
     # Liegt auf dem gemeinsamen Stueck von S6 und S15 zum Hauptbahnhof.
     # Klammern setzt planned(), hier steht nur der Umbruch.
-    Station("perlegerberger_bruecke", "Perlegerberger Brücke",
-            label="Perlegerberger\nBrücke"),
+    Station("perleberger_bruecke", "Perleberger Brücke",
+            label="Perleberger\nBrücke"),
 ]
 
 _SIEMENSBAHN: List[Step] = [
@@ -82,7 +82,7 @@ _R_WEDDING = 0.4                              # Ring -> Perleberger Bruecke
 # Bestand schon die S15 benutzt. Hier endet die S6 -- der Tunnel weiter zum
 # Potsdamer Platz gehoert in die naechste Stufe.
 _HBF_ZULAUF: List[Step] = [
-    "perlegerberger_bruecke", FlexPath(),
+    "perleberger_bruecke", FlexPath(),
     *bestand._NORD_SUED_TUNNEL_HBF,
 ]
 
@@ -106,7 +106,7 @@ _S15_MIT_BRUECKE = VORGAENGER.splice_line(
     "S15",
     [Turn(-135, radius=0.4), FlexPath(), Turn(45), FlexPath()],
     [Turn(-135, radius=_R_WEDDING), FlexPath(),
-     "perlegerberger_bruecke", FlexPath(), Turn(45), FlexPath()],
+     "perleberger_bruecke", FlexPath(), Turn(45), FlexPath()],
 )
 
 
@@ -207,7 +207,7 @@ SIEMENSBAHN_CORRIDORS: Dict[str, Corridor] = {
         # uebereinander.
         # Am Hauptbahnhof liegen die drei nebeneinander: S6 links, S15 in
         # der Mitte, S85 rechts.
-        steps=["westhafen", "perlegerberger_bruecke", "hauptbahnhof"],
+        steps=["westhafen", "perleberger_bruecke", "hauptbahnhof"],
         offsets={"S6": 1.0, "S1": 0.0, "S8": -1.0},
     ),
     "hbf_zulauf_wedding": Corridor(
@@ -215,7 +215,7 @@ SIEMENSBAHN_CORRIDORS: Dict[str, Corridor] = {
         # aussen -- sie kommt von dort auf dem Ring und hat bis Gesundbrunnen
         # keine Kurve mehr, an der sie die Spur wechseln koennte. Auf die
         # rechte Spur schwenkt sie erst im Bogen vor dem Hauptbahnhof.
-        steps=["wedding", "perlegerberger_bruecke"],
+        steps=["wedding", "perleberger_bruecke"],
         offsets={"S8": 1.0, "S1": 0.0},
     ),
     "ring_gesundbrunnen_wedding": Corridor(
@@ -556,7 +556,6 @@ NET = VORGAENGER.derive(
     label_offsets={
         "hauptbahnhof": REMOVE,
         "gesundbrunnen": (0.0, -12.0),
-        "buch": (7.0, -7.0),
         "pankow": REMOVE,
     },
     # Die Tabelle ist um S6 und S86 gewachsen, und unter ihr liegt jetzt

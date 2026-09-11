@@ -13,7 +13,7 @@ die Geometrie und zeichnet sie. Das Berliner Netz lebt komplett außerhalb, in
 | `berlin_2030.py`, `berlin_2030plus.py`, `berlin_2040plus.py` | die Ausbaustufen, jede als **Differenz** zur vorherigen. Nur was sich ändert, steht darin |
 | `outputs/` | die erzeugten SVG- und PNG-Dateien |
 
-Beide Netzskripte nehmen optional einen Zielpfad als Argument.
+Alle Netzskripte nehmen optional einen Zielpfad als Argument.
 `write_map(..., draw_corridors=True)` blendet die grauen Hilfstrassen ein —
 nützlich, um den Spurversatz gegen die Trassenmitte zu prüfen.
 
@@ -40,7 +40,7 @@ TurnLine(
 
 In `berlin_2026.py` steht die Stationsfolge selbst nicht in der Linie, sondern
 in Strecken-Konstanten (`_WANNSEE_BAHN`, `_RING`, `_NORD_BAHN`, …), aus denen
-`_slice()` das passende Stück schneidet — siehe „Praktisch" ganz unten.
+`_slice()` das passende Stück schneidet — siehe „Praktisch“ ganz unten.
 
 Das hat zwei Konsequenzen, die den ganzen Rest erklären:
 
@@ -82,7 +82,7 @@ Zwei Stationen ohne Modifier dazwischen ergeben ein Bein mit `line.spacing`.
 Ein `Turn` dazwischen ergibt zwei Beine mit einem Knick.
 
 Der **Radius eines Turns ist hier schon Geometrie, nicht Optik** (und gilt für
-die Trassenmitte, siehe „Wessen Radius ist gemeint?" in Phase 4b): über seine
+die Trassenmitte, siehe „Wessen Radius ist gemeint?“ in Phase 4b): über seine
 Tangente `t = R · tan(δ/2)` belegt der Bogen Platz auf beiden Nachbarbeinen.
 Deshalb wird er beim Parsen aufgelöst und geht in Phase 3 als *untere
 Längenschranke* ein — eine Kurve kann ein Bein zu kurz machen, und das muss der
@@ -93,8 +93,8 @@ Sonderfall `FixPath(0.0)`: ein Bein der Länge 0 vor einem Turn setzt den Knick
 **exakt auf die Station** statt irgendwo zwischen zwei Stationen. Es verschiebt
 nichts und zählt deshalb auch nicht zur Form des gemeinsamen Korridors — nur so
 kann eine Linie an einem Bahnhof abbiegen, dessen beide Nachbarkanten sie mit
-geradeaus fahrenden Linien teilt (in `berlin_2040plus.py` genau der Fall der
-S15 am Gesundbrunnen).
+geradeaus fahrenden Linien teilt (in `berlin_2030.py` genau der Fall der
+S15 am Gesundbrunnen, die späteren Stufen erben ihn).
 
 ### Phase 2b — Startwinkel (`infer_start_bearings`)
 
@@ -219,7 +219,7 @@ Bis hier gibt es nur Trassenmitten. Jetzt bekommt jede Linie ihre eigene Spur.
   der der Radius der Trassenmitte gehört — das benutzt nur der Ring.
 - Alte Lesart (nur noch dort): der Radius wird um den Versatz korrigiert — innen enger, außen weiter.
   Maßgeblich ist die **Mitte aus der Spur vor und hinter dem Knick**, nicht die
-  davor: „davor" liegt für zwei gegenläufige Linien an entgegengesetzten Enden
+  davor: „davor“ liegt für zwei gegenläufige Linien an entgegengesetzten Enden
   desselben Bogens. Wechselt das Bündel dort die Spur, nähme jede ihren Wert
   von ihrer Seite — zwei Linien, die durchgehend eine Spur nebeneinander
   laufen, bekämen dann Radien, die um den ganzen Spurwechsel auseinanderliegen.
@@ -240,8 +240,8 @@ tatsächlich zeichnet, ist Mitte ± Spurversatz (siehe oben), und über ein Bün
 von vier Spuren liegen diese Werte gut eine Einheit auseinander. Der Wert, den
 man hinschreibt, ist also nicht der, den man auf der Karte nachmisst.
 
-Zwei Schreibweisen machen ihn nachprüfbar, beide im `Corridor` und beide nur
-für die Knicke **dieser Kante**:
+Drei Felder im `Corridor` legen fest, wessen Radius gemeint ist, alle nur für
+die Knicke **dieser Kante**. Die ersten beiden machen ihn nachprüfbar:
 
 | | Bedeutung | wann |
 |---|---|---|
@@ -285,11 +285,31 @@ Gezeichnet wird in Schichten, in dieser Reihenfolge:
    Linie, reicht er über den Fensterrand hinaus; die Schwestern werden
    deshalb in einem um die halbe Randbreite größeren Fenster nachgezogen.
    Ohne das schnitt am Westkreuz der Rand der S7 in die daneben in die Gabel
-   einlaufende S75
+   einlaufende S75. Danach die Richtungspfeile (`direction_arrows`): zwei
+   spitze Dreiecke (`arrow_tip_angle`, derzeit 50° an der Spitze), je Seite
+   um `arrow_overhang` (derzeit 2,5 px) breiter als die Linie
+   und mittig auf ihr — unten ein weißes, darüber eines in Linienfarbe. Das
+   weiße liegt so weit in Fahrtrichtung vor, dass an beiden Flanken
+   `arrow_edge` (derzeit 1,25 px) Weiß stehen bleiben. Jeder Pfeil rückt um
+   `arrow_stagger` (derzeit 10 px) gegen seine Fahrtrichtung, damit zwei
+   gegenläufige nebeneinander auseinanderstehen. Sie stehen in der Mitte des
+   SICHTBAREN Stücks zwischen zwei Stationen, gemessen ab dem Rand von Pille
+   bzw. Stationspunkt statt ab der Stationsmitte — sonst schöben große Hubs
+   wie Westkreuz und Ostkreuz sie sichtbar aus der Mitte. Im Bestand je zwei
+   für S41 und S42, auf der West- und der Ostseite des Rings
 3. Stationspunkte — einer **je Linie an deren Spur**, nicht einer auf der
    womöglich leeren Trassenmitte
 4. Hub-Pillen quer über das Bündel
-5. Endpunktringe und Linien-Signets
+5. Endpunktringe und Linien-Signets. Neben dem vollen Signet an der
+   Endstation gibt es ein **umrandetes** — weiß gefüllt, Rand und Schrift in
+   der Linienfarbe, rundum 0,25 px größer bei gleicher Schrift; die Schrift trägt eine feine Kontur in ihrer
+   Farbe, weil sie auf Weiß sonst dünner wirkt als die weiße — an
+   Zwischenenden: Stationen, an denen laut
+   Zuggruppen-Tabelle einzelne Gruppen enden, die Linie aber weiterfährt
+   („Wannsee <> Frohnau“ auf der S1). Abgeleitet wird es aus den Laufwegen der
+   `TrainGroup`s, deren Namen deshalb genau den Stationsnamen entsprechen
+   müssen. Eine solche Station bekommt nur das Signet, keinen Ring und keine
+   Pille; in der Reihe stehen die vollen Signets vorn
 6. Beschriftungen
 7. optional die grauen Hilfstrassen (`draw_corridors`)
 8. die Zuggruppen-Tabelle (`legend_at`)
@@ -364,17 +384,17 @@ sie bedeuten:
 
 | Meldung | Ursache |
 |---|---|
-| „Gemeinsamer Korridor … hat unterschiedliche Geometrie" | Zwei Linien beschreiben dieselbe Kante verschieden — andere Länge, anderer Turn, anderes `FlexPath` |
-| „Widersprüchliche Startwinkel für …" | Zwei gesetzte `start`-Werte passen über die gemeinsamen Kanten nicht zusammen |
-| „Die Linienregeln sind geometrisch widersprüchlich" | Phase 3 findet keine Lösung — meist zu viele starre Längen auf einem geschlossenen Weg |
-| „Längengrenzen konnten nicht gelöst werden" | Das Active-Set konvergiert nicht; min/max sind irgendwo unerfüllbar |
-| „Korridor '…': … fährt A -> B, hat aber keinen Versatz" | Eine Linie wurde ergänzt, der Korridor nicht nachgezogen |
-| „Korridor '…': A -> B ist keine Kante im Netz" | Ein Korridor nennt ein Stationspaar, das keine Linie so befährt |
+| „Gemeinsamer Korridor … hat unterschiedliche Geometrie“ | Zwei Linien beschreiben dieselbe Kante verschieden — andere Länge, anderer Turn, anderes `FlexPath` |
+| „Widersprüchliche Startwinkel für …“ | Zwei gesetzte `start`-Werte passen über die gemeinsamen Kanten nicht zusammen |
+| „Die Linienregeln sind geometrisch widersprüchlich“ | Phase 3 findet keine Lösung — meist zu viele starre Längen auf einem geschlossenen Weg |
+| „Längengrenzen konnten nicht gelöst werden“ | Das Active-Set konvergiert nicht; min/max sind irgendwo unerfüllbar |
+| „Korridor '…': … fährt A -> B, hat aber keinen Versatz“ | Eine Linie wurde ergänzt, der Korridor nicht nachgezogen |
+| „Korridor '…': A -> B ist keine Kante im Netz“ | Ein Korridor nennt ein Stationspaar, das keine Linie so befährt |
 
 ## Ausbaustufen: `Net.derive`
 
 Ein späteres Netz beschreibt nur den **Unterschied** zum vorherigen.
-`Net.derive()` erbt alle neun Felder von `Net`; genannt wird nur, was sich
+`Net.derive()` erbt alle Felder von `Net`; genannt wird nur, was sich
 ändert:
 
 ```python
@@ -412,8 +432,9 @@ Linie. Wer dort fehlt, taucht in der Tabelle nicht auf.
 Ableitungen lassen sich **ketten** — genau so hängen die Netzdateien
 zusammen: `berlin_2026` → `berlin_2030` → `berlin_2030plus` →
 `berlin_2040plus`, jede leitet von ihrem Vorgänger ab. Damit die Stufe wirklich auf ihrem Vorgänger sitzt
-und nicht auf dem Bestand, greifen die Helfer einer Netzdatei (`_extend`,
-`_restyle`) über die eine Konstante `VORGAENGER` zu. Davon zu unterscheiden
+und nicht auf dem Bestand, greift eine Netzdatei über die eine Konstante
+`VORGAENGER` auf ihn zu — mit dessen Methoden `line()`, `station()`,
+`extend_line()` und `splice_line()`. Davon zu unterscheiden
 sind die **Bausteine** — `_RING`, `_slice()`, die `_KURVE_*`-Konstanten: die
 sind für jede Stufe dieselben und kommen weiter direkt aus `berlin_2026`.
 
@@ -426,7 +447,8 @@ Phase 2b sofort unterschiedliche Geometrie. Deshalb stehen die
 Strecken-Konstanten in `berlin_2026.py` (`_RING`, `_NORD_BAHN`, …) einmal
 zentral und werden per `_slice()` in die einzelnen Linien geschnitten.
 
-`berlin_2040plus.py` treibt das weiter: Es beschreibt sein Netz als Differenz
-zum Bestand (`_extend`, `_insert_after`, `_splice`, `CHANGED_LINES`,
-`DROPPED_LINES`). Eine Korrektur in `berlin_2026.py` — ein verschobener Spurversatz,
-ein besseres `label_pos` — wirkt damit automatisch auf beide Karten.
+Die Ausbaustufen treiben das weiter: Jede beschreibt ihr Netz als Differenz
+zu ihrem Vorgänger (`CHANGED_LINES`, `insert_after`, `splice`, `REMOVE`).
+Eine Korrektur in `berlin_2026.py` — ein verschobener Spurversatz, ein
+besseres `label_pos` — wirkt damit automatisch auf alle vier Karten, solange
+eine spätere Stufe die Stelle nicht selbst ändert.

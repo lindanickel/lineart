@@ -383,8 +383,8 @@ GROUPS["S6"] = [
 # Keine Stichfahrt mehr zum Gesundbrunnen, sondern durchgebunden von der
 # Nordbahn ueber den neuen Tunnel bis Zehlendorf.
 GROUPS["S15"] = [
-    TrainGroup("Stammzuggruppe", "Zehlendorf <> Frohnau", 3),
-    TrainGroup("Tageszuggruppe", "Zehlendorf <> Gesundbrunnen", 3),
+    TrainGroup("Stammzuggruppe", "Zehlendorf <> Hbf <> Frohnau", 3),
+    TrainGroup("Tageszuggruppe", "Zehlendorf <> Hbf <> Gesundbrunnen", 3),
 ]
 # Den Verstaerker zum Potsdamer Platz fahren jetzt S15 und S6 durch den
 # neuen Tunnel -- die S1 braucht ihre HVZ-Zuggruppen dafuer nicht mehr.
@@ -400,7 +400,7 @@ GROUPS["S2"] = [
 # faehrt als Stammzuggruppe durch bis Velten, die S26 als Tageszuggruppe nur
 # bis Hennigsdorf -- so weit reicht auch ihr Laufweg auf der Karte. Ihr alter
 # Nordast Pankow -- Blankenburg faellt weg, den faehrt die S2.
-GROUPS["S25"] = [TrainGroup("Stammzuggruppe", "Stahnsdorf <> Velten", 3)]
+GROUPS["S25"] = [TrainGroup("Stammzuggruppe", "Stahnsdorf <> Hbf <> Velten", 3)]
 GROUPS["S26"] = [TrainGroup("Tageszuggruppe", "Stahnsdorf <> Hennigsdorf", 3)]
 # Der Ast zum Hauptbahnhof ging an die S15; dafuer faehrt die S85 jetzt den
 # Nordast der entfallenen S86 bis Buch.
@@ -410,8 +410,8 @@ GROUPS["S26"] = [TrainGroup("Tageszuggruppe", "Stahnsdorf <> Hennigsdorf", 3)]
 # Zuege aufgefangen. Der schwaechere Nordabschnitt der S8 bleibt bei zwei
 # Viertelzuegen -- von vier sind damit zwei nur umrandet.
 GROUPS["S8"] = [
-    TrainGroup("Stammzuggruppe", "Wildau <> Hohen Neuendorf", 4, hollow=2,
-               note="Blankenburg <> Hohen Neuendorf", note_cars=2),
+    TrainGroup("Stammzuggruppe", "Wildau <> Birkenwerder", 4, hollow=2,
+               note="Blankenburg <> Birkenwerder", note_cars=2),
 ]
 GROUPS["S85"] = [TrainGroup("Stammzuggruppe", "Flughafen BER <> Buch", 4)]
 del GROUPS["S86"]
@@ -478,7 +478,7 @@ NET = VORGAENGER.derive(
             # Kurve durch Wedding bis zum Gesundbrunnen. Er legt also auch
             # ihre Spur auf dem Ringstueck fest (siehe `ring`), und weil sie
             # der S15 dort entgegenkommt, hat er das umgekehrte Vorzeichen.
-            steps=["wedding", "perlegerberger_bruecke"],
+            steps=["wedding", "perleberger_bruecke"],
             offsets={"S1": 0.0, "S25": 1.0},
         ),
         "hbf_zulauf_westhafen": Corridor(
@@ -488,7 +488,7 @@ NET = VORGAENGER.derive(
             # ist derselbe wie auf `hbf_potsdamer_platz` -- gebraucht wird er
             # von dort, hier steht er nur, weil jede Linie auf einer
             # Korridorkante einen Versatz braucht.
-            steps=["westhafen", "perlegerberger_bruecke", "hauptbahnhof"],
+            steps=["westhafen", "perleberger_bruecke", "hauptbahnhof"],
             offsets={"S6": 1.0, "S1": 0.0, "S25": -1.0},
         ),
 
@@ -505,6 +505,11 @@ NET = VORGAENGER.derive(
     # Versatz von Name und Tag zusammen (wie in Buch oder Blankenburg) wurde
     # probiert und sieht hier gedraengter aus.
     badge_opposite_corner={"hennigsdorf": True},
+    # Hier enden die Tageszuege der S15 (umrandetes Signet). Unter dem Namen
+    # laege es auf der S15, die von Westen einbiegt; Platz dafuer gaebe es
+    # nur, wenn der Name bis an Bornholmer Strasse hinaufrueckt. Das Signet
+    # steht deshalb ausnahmsweise ueber dem Namen.
+    badge_above=("gesundbrunnen",),
     label_offsets={
         # Bisher endete die S15 hier und das Tag brauchte die vollen 18 px
         # Luft. Jetzt faehrt sie durch, es gibt kein Tag mehr -- die

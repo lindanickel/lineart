@@ -1,4 +1,4 @@
-# S-Bahn Berlin Netz
+# S-Bahn-Netz Berlin
 
 Das Projekt ist ein kleines Experiment, wie gut Claude Code beim Erstellen von
 komplexen Plots funktioniert. Der Großteil des Codes wurde mit Claude Code
@@ -32,50 +32,36 @@ berlin_2026  →  berlin_2030  →  berlin_2030plus  →  berlin_2040plus
                                  S25, Kamenzer Damm   tangente Nord
 ```
 
-## Alte Dateien
-
-Drei eigenständige Vorgänger-Engines, jede mit eigenem `__main__`. Keine davon
-wird vom aktuellen Stand importiert; sie liegen nur noch als
-Entwicklungsgeschichte herum.
-
-- `sbahnberlin_plot.py` — der erste Generator. Netz über feste
-  Rasterkoordinaten (`STATIONS: Dict[str, Pt]`). → `outputs/netzplan.svg`
-- `turn_engine.py` — erstmals turn-basiert statt koordinatenbasiert, komplett
-  eigenständig. → `outputs/netzplan_turns.svg`
-- `chatgpt_netz.py` — die monolithische „Gleiskarte-Engine“ mit
-  `FixPath`/`FlexPath`, `Config`, `StyleConfig` und Korridoren. Der direkte
-  Vorfahr von `netmap/`, das daraus in Module zerlegt wurde. →
-  `outputs/gleiskarte.svg`
-
-## Das aktuelle Berliner S-Bahn Netz, Stand 2026
+## Das aktuelle Berliner S-Bahn-Netz, Stand 2026
 
 ![S-Bahn-Netz 2026](outputs/berlin_sbahn_2026.png)
 
 Vektorfassung: [`outputs/berlin_sbahn_2026.svg`](outputs/berlin_sbahn_2026.svg)
 
-## Zukünftige Stadien des Berliner S-Bahn Netzes
+## Zukünftige Stadien des Berliner S-Bahn-Netzes
 
-Die Maßnahmen sind in drei Stufen sortiert. Maßgeblich für die Einordnung ist
-weniger das einzelne Bauwerk als die **Abhängigkeit**: die City-S-Bahn kann nur
-Abschnitt für Abschnitt wachsen, und die Nordast-Umbauten hängen alle am
-Karower Kreuz.
+Die Maßnahmen sind in drei Stufen sortiert, grob nach den möglichen
+Fertigstellungsdaten.
 
 ### Stufe 1 — Ende der 2020er (`berlin_2030.py`)
 
-- Fertigstellung der Siemensbahn: S6 von Gartenfeld über Siemensstadt und
-  Wernerwerk zum Ring und weiter zum Hauptbahnhof
+- Wiederaufbau der Siemensbahn von Jungfernheide nach Gartenfeld mit den
+  Stationen Wernerwerk, Siemensstadt und Gartenfeld
+- Neue Station Perleberger Brücke am nördlichen Zulauf zum Hauptbahnhof
 - Fertigstellung der endgültigen Station Hbf tief und Ablösung der
   Interimsstation mit ihrem einen Bahnsteig für Halbzüge
-- Teilweise Zweigleisiger Ausbau der Strecke Hoppegarten – Strausberg (S5)
-  für einen 10-Minutentakt bis Strausberg
-- S3 endet in Charlottenburg, die S75 übernimmt dafür den Spandauer Ast
-  und fährt von Wartenberg durch bis Spandau
-- Neue Linie S86 Grünau – Buch: sie fährt auf vorhandener Strecke, bis
-  Blankenburg auf dem Weg der S8, danach neben der S2. Beide Endpunkte
-  werden Umsteigebahnhöfe.
+- Teilweise zweigleisiger Ausbau der Strecke Hoppegarten – Strausberg
 
-S6 und S15 enden hier noch am Hauptbahnhof; der Tunnel nach Süden kommt erst
-in Stufe 2.
+Auf der Siemensbahn fährt die neue Linie S6 von Gartenfeld über den Ring zum
+Hauptbahnhof. Die S5 fährt dank des Ausbaus im 10-Minuten-Takt bis
+Strausberg. Den Spandauer Ast übernimmt die S75 und fährt von Wartenberg
+durch bis Spandau; die S3 endet dafür in Charlottenburg. Neu ist außerdem die
+S86 von Grünau nach Buch, sie fährt auf vorhandener Strecke.
+
+Auf der Nordbahn übernimmt die S15 den Laufweg der S85 und fährt vom
+Hauptbahnhof bis Frohnau; die S85 endet dafür am Hauptbahnhof, ihr HVZ-Ast
+nach Pankow entfällt. S6, S15 und S85 enden hier noch am Hauptbahnhof; der
+Tunnel nach Süden kommt erst in Stufe 2.
 
 ![S-Bahn-Netz 2030](outputs/berlin_sbahn_2030.png)
 
@@ -83,41 +69,54 @@ in Stufe 2.
 
 - Fertigstellung des BA2 der City-S-Bahn: Tunnel von Hbf tief bis Potsdamer
   Platz
-- Ausbau der S25 nach Süden um Iserstraße und Stahnsdorf
-- Zweigleisiger Ausbau der Kremmener Bahn (S25) bis Hennigsdorf, mit der neuen
+- Verlängerung der Strecke von Teltow Stadt nach Süden mit den Stationen
+  Iserstraße und Stahnsdorf
+- Zweigleisiger Ausbau der Kremmener Bahn bis Hennigsdorf, mit der neuen
   Station Borsigwalde
-- Verlängerung der S25 nach Norden bis Velten, mit Hennigsdorf Nord und Velten
-- Neue Station Kamenzer Damm auf der S2
-- Zweigleisiger Wiederaufbau der Strecke Buch – Bernau (S2)
+- Verlängerung der Kremmener Bahn nach Norden bis Velten, mit den Stationen
+  Hennigsdorf Nord und Velten
+- Neue Station Kamenzer Damm auf der Dresdner Bahn
+- Zweigleisiger Wiederaufbau der Strecke Buch – Bernau
 
-Mit dem durchgebundenen Tunnel gibt die S85 die Nordbahn ab und endet in
-Pankow; die S15 übernimmt sie und fährt von Frohnau bis Zehlendorf durch.
-Aus den beiden Zuggruppen der S25 werden zwei Linien: die S25 fährt über den
-neuen Tunnel und den Hauptbahnhof bis Velten, die S26 auf dem alten Weg durch
-den Nord-Süd-Tunnel bis Hennigsdorf. Ihren bisherigen Nordast Pankow –
-Blankenburg gibt die S26 an die S2 ab.
+Mit dem durchgebundenen Tunnel entfallen die Verstärker auf der S1 und die S15
+wird von Zehlendorf bis Frohnau verlängert. Die S6 fährt durch den neuen
+Tunnel bis Potsdamer Platz. Die S85 fährt statt zum Hauptbahnhof über Pankow
+bis Buch, die S86 entfällt. Die Tageszüge der S2 fahren bis Bernau statt nur
+bis Buch.
+
+Die S25 fährt künftig von Stahnsdorf über den neuen Tunnel und den
+Hauptbahnhof bis Velten. Die S26 wird von der Stettiner Bahn auf die
+Kremmener Bahn verlegt und fährt von Stahnsdorf auf dem alten Weg durch den
+Nord-Süd-Tunnel bis Hennigsdorf.
 
 ![S-Bahn-Netz 2030plus](outputs/berlin_sbahn_2030plus.png)
 
 ### Stufe 3 — 2040er Jahre (`berlin_2040plus.py`)
 
-- Fertigstellung des BA3a und 3b der City-S-Bahn: Verlängerung von Potsdamer
-  Platz bis Yorckstraße und Yorckstraße (Großgörschenstraße), mit der neuen
-  Station Gleisdreieck. Errichtung der Cheruskerkurve und Verbindung der
-  Stammbahn Richtung Osten mit dem Südring
-- Bau der Nahverkehrstangente Nord und Errichtung des Kreuzungsbahnhofs
-  Karower Kreuz, Verlängerung der S75 bis Birkenwerder
+- Fertigstellung des BA3a und 3b der City-S-Bahn: Verlängerung vom Potsdamer
+  Platz über die neue Station Gleisdreieck bis Yorckstraße und Yorckstraße
+  (Großgörschenstraße)
+- Errichtung der Cheruskerkurve als Verbindung der Stammbahn Richtung Osten
+  mit dem Südring
+- Bau der Nahverkehrstangente Nord von Wartenberg über die neuen Stationen
+  Parkstadt Pankow und Sellheimbrücke zum neuen Kreuzungsbahnhof Karower
+  Kreuz an der Stettiner Bahn
 - Zwei neue Stationen Bucher Straße und Schönlinder Straße auf dem Berliner
   Außenring
-- Die S6 fährt über den BA3 vom Potsdamer Platz weiter und biegt in
-  Schöneberg auf den Südring ab — von dort bis Königs Wusterhausen. Die S46
-  fährt dorthin deshalb nicht mehr; an ihre Stelle tritt die bis Westend
-  verlängerte S47, die damit S46 heißt
 
-Die S86 entfällt; ihren Ast von Pankow nach Buch fährt jetzt die S85, die
-bisher in Pankow endete. Die S75 übernimmt den Nordast der bisherigen S8,
-die dafür in Buch beginnt. Im Westen geht der Spandauer Ast zurück an die S3; die S75 endet
-dort in Charlottenburg.
+S6 und S15 fahren vom Potsdamer Platz weiter über Gleisdreieck bis Yorckstraße
+(Großgörschenstraße), die S15 damit nicht mehr über den Anhalter Bahnhof. Die
+S25 nimmt den anderen Ast und fährt von Yorckstraße über Gleisdreieck in den
+neuen Tunnel, ebenfalls nicht mehr über den Anhalter Bahnhof. Die S6 biegt
+hinter Julius-Leber-Brücke über die Cheruskerkurve auf den Südring ab und
+fährt von dort bis Königs Wusterhausen; auf der Görlitzer Bahn übernimmt sie
+damit die Funktion der S46. Die S46 fährt deshalb statt nach Königs
+Wusterhausen nach Spindlersfeld, die S47 entfällt.
+
+Die S75 fährt über die Nahverkehrstangente bis Birkenwerder und übernimmt
+dabei den Nordast der bisherigen S8, die dafür in Buch beginnt. Im Westen
+geht der Spandauer Ast zurück an die S3; die S75 endet dort in
+Charlottenburg.
 
 ![S-Bahn-Netz 2040plus](outputs/berlin_sbahn_2040plus.png)
 

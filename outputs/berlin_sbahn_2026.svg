@@ -59,6 +59,14 @@
 <path d="M 296.614 782.934 L 314.797 764.751" fill="none" stroke="white" stroke-width="12.0" stroke-linecap="butt" stroke-linejoin="round"/>
 <path d="M 305.109 774.439 L 321.387 758.161 L 321.914 757.651 L 322.457 757.159 L 323.016 756.685 L 323.387 756.390" fill="none" stroke="#816DA6" stroke-width="8.0" stroke-linecap="butt" stroke-linejoin="round"/>
 <path d="M 296.614 782.934 L 314.797 764.751" fill="none" stroke="#816DA6" stroke-width="8.0" stroke-linecap="butt" stroke-linejoin="round"/>
+<path d="M383.55,825.47 L390.05,839.41 L377.05,839.41 Z" fill="white"/>
+<path d="M383.55,828.43 L390.05,842.37 L377.05,842.37 Z" fill="#AD5937"/>
+<path d="M1003.55,713.60 L997.05,699.66 L1010.05,699.66 Z" fill="white"/>
+<path d="M1003.55,710.64 L997.05,696.71 L1010.05,696.71 Z" fill="#AD5937"/>
+<path d="M371.55,825.33 L365.05,811.39 L378.05,811.39 Z" fill="white"/>
+<path d="M371.55,822.37 L365.05,808.43 L378.05,808.43 Z" fill="#CB6418"/>
+<path d="M1015.55,713.75 L1022.05,727.69 L1009.05,727.69 Z" fill="white"/>
+<path d="M1015.55,716.71 L1022.05,730.64 L1009.05,730.64 Z" fill="#CB6418"/>
 <circle cx="135.3" cy="1236.4" r="2.6" fill="white"/>
 <circle cx="235.0" cy="1220.3" r="2.6" fill="white"/>
 <circle cx="327.2" cy="1220.3" r="2.6" fill="white"/>
@@ -397,7 +405,7 @@
 <text x="661.6" y="965.7" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="end">Julius-Leber-Brücke</text>
 <text x="684.6" y="931.2" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="end"><tspan x="684.6" dy="0.0">Yorckstraße</tspan><tspan x="684.6" dy="11.5" font-size="8.5">(Großgörschenstraße)</tspan></text>
 <text x="704.7" y="907.0" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="end">Anhalter Bahnhof</text>
-<text x="704.7" y="873.4" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="end">Potsdamer Platz</text>
+<text x="704.7" y="867.6" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="end">Potsdamer Platz</text>
 <text x="704.7" y="839.8" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="end">Brandenburger Tor</text>
 <text x="732.7" y="731.1" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="start"><tspan x="732.7" dy="0.0">Friedrich-</tspan><tspan x="732.7" dy="11.5">straße</tspan></text>
 <text x="732.7" y="688.4" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="start"><tspan x="732.7" dy="0.0">Oranienburger</tspan><tspan x="732.7" dy="11.5">Straße</tspan></text>
@@ -433,7 +441,7 @@
 <text x="813.2" y="382.7" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="start">Pankow-Heinersdorf</text>
 <text x="851.2" y="346.4" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="start">Blankenburg</text>
 <text x="883.9" y="295.1" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="start">Karow</text>
-<text x="907.7" y="271.3" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="start">Buch</text>
+<text x="914.7" y="264.3" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="start">Buch</text>
 <text x="931.4" y="247.5" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="start">Röntgental</text>
 <text x="955.2" y="223.8" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="start">Zepernick</text>
 <text x="979.0" y="200.0" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="start">Bernau-Friedenstal</text>
@@ -466,7 +474,7 @@
 <text x="774.7" y="802.6" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="middle"><tspan x="774.7" dy="0.0">Hackescher</tspan><tspan x="774.7" dy="11.5">Markt</tspan></text>
 <text x="816.7" y="731.1" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="middle"><tspan x="816.7" dy="0.0">Alexander-</tspan><tspan x="816.7" dy="11.5">platz</tspan></text>
 <text x="858.7" y="802.6" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="middle"><tspan x="858.7" dy="0.0">Jannowitz-</tspan><tspan x="858.7" dy="11.5">brücke</tspan></text>
-<text x="900.7" y="742.6" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="middle">Ostbahnhof</text>
+<text x="900.7" y="724.6" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="middle">Ostbahnhof</text>
 <text x="942.7" y="802.6" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="middle"><tspan x="942.7" dy="0.0">Warschauer</tspan><tspan x="942.7" dy="11.5">Straße</tspan></text>
 <text x="995.5" y="742.6" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="end">Ostkreuz</text>
 <text x="1119.7" y="802.5" font-size="10.0" font-weight="bold" fill="#111111" text-anchor="start">Rummelsburg</text>
@@ -560,28 +568,48 @@
 <text x="866.2" y="362.1" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 26</text>
 <rect x="895.1" y="1256.4" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#007734"/>
 <text x="907.1" y="1268.1" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 2</text>
+<rect x="915.42" y="268.80" width="23.00" height="14.00" rx="7.00" ry="7.00" fill="white" stroke="#007734" stroke-width="1.5"/>
+<text x="926.9" y="280.0" font-size="12.0" font-weight="500" fill="#007734" stroke="#007734" stroke-width="0.3" stroke-linejoin="round" text-anchor="middle">S 2</text>
+<rect x="427.25" y="818.60" width="23.00" height="14.00" rx="7.00" ry="7.00" fill="white" stroke="#0066AD" stroke-width="1.5"/>
+<text x="438.7" y="829.8" font-size="12.0" font-weight="500" fill="#0066AD" stroke="#0066AD" stroke-width="0.3" stroke-linejoin="round" text-anchor="middle">S 3</text>
 <rect x="1487.2" y="893.6" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#0066AD"/>
 <text x="1499.2" y="905.3" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 3</text>
 <rect x="1127.9" y="1308.6" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#66AA22"/>
 <text x="1142.9" y="1320.3" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 85</text>
 <rect x="1160.9" y="1308.6" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#992746"/>
 <text x="1172.9" y="1320.3" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 9</text>
-<rect x="672.7" y="188.4" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#66AA22"/>
-<text x="687.7" y="200.1" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 85</text>
+<rect x="1342.49" y="923.35" width="23.00" height="14.00" rx="7.00" ry="7.00" fill="white" stroke="#0066AD" stroke-width="1.5"/>
+<text x="1354.0" y="934.6" font-size="12.0" font-weight="500" fill="#0066AD" stroke="#0066AD" stroke-width="0.3" stroke-linejoin="round" text-anchor="middle">S 3</text>
+<rect x="645.2" y="188.4" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#66AA22"/>
+<text x="660.2" y="200.1" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 85</text>
+<rect x="679.00" y="188.95" width="23.00" height="14.00" rx="7.00" ry="7.00" fill="white" stroke="#DA6BA2" stroke-width="1.5"/>
+<text x="690.5" y="200.1" font-size="12.0" font-weight="500" fill="#DA6BA2" stroke="#DA6BA2" stroke-width="0.3" stroke-linejoin="round" text-anchor="middle">S 1</text>
 <rect x="674.7" y="510.6" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#DA6BA2"/>
 <text x="689.7" y="522.3" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 15</text>
 <rect x="630.3" y="728.6" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#DA6BA2"/>
 <text x="645.3" y="740.3" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 15</text>
 <rect x="504.5" y="182.2" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#007734"/>
 <text x="519.5" y="193.9" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 25</text>
+<rect x="1425.24" y="670.31" width="23.00" height="14.00" rx="7.00" ry="7.00" fill="white" stroke="#EC7405" stroke-width="1.5"/>
+<text x="1436.7" y="681.5" font-size="12.0" font-weight="500" fill="#EC7405" stroke="#EC7405" stroke-width="0.3" stroke-linejoin="round" text-anchor="middle">S 5</text>
 <rect x="1463.1" y="1292.2" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#CD9C53"/>
 <text x="1478.1" y="1303.9" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 46</text>
+<rect x="808.14" y="1209.75" width="23.00" height="14.00" rx="7.00" ry="7.00" fill="white" stroke="#007734" stroke-width="1.5"/>
+<text x="819.6" y="1221.0" font-size="12.0" font-weight="500" fill="#007734" stroke="#007734" stroke-width="0.3" stroke-linejoin="round" text-anchor="middle">S 2</text>
+<rect x="1346.84" y="670.31" width="23.00" height="14.00" rx="7.00" ry="7.00" fill="white" stroke="#EC7405" stroke-width="1.5"/>
+<text x="1358.3" y="681.5" font-size="12.0" font-weight="500" fill="#EC7405" stroke="#EC7405" stroke-width="0.3" stroke-linejoin="round" text-anchor="middle">S 5</text>
 <rect x="678.7" y="37.2" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#DA6BA2"/>
 <text x="690.7" y="49.0" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 1</text>
+<rect x="875.50" y="729.10" width="23.00" height="14.00" rx="7.00" ry="7.00" fill="white" stroke="#0066AD" stroke-width="1.5"/>
+<text x="887.0" y="740.3" font-size="12.0" font-weight="500" fill="#0066AD" stroke="#0066AD" stroke-width="0.3" stroke-linejoin="round" text-anchor="middle">S 3</text>
+<rect x="903.00" y="729.10" width="23.00" height="14.00" rx="7.00" ry="7.00" fill="white" stroke="#EC7405" stroke-width="1.5"/>
+<text x="914.5" y="740.3" font-size="12.0" font-weight="500" fill="#EC7405" stroke="#EC7405" stroke-width="0.3" stroke-linejoin="round" text-anchor="middle">S 5</text>
 <rect x="787.9" y="413.8" width="30.0" height="15.0" rx="7.5" ry="7.5" fill="#66AA22"/>
 <text x="802.9" y="425.5" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 85</text>
 <rect x="-2.2" y="1324.2" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#816DA6"/>
 <text x="9.8" y="1335.9" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 7</text>
+<rect x="681.00" y="872.15" width="23.00" height="14.00" rx="7.00" ry="7.00" fill="white" stroke="#DA6BA2" stroke-width="1.5"/>
+<text x="692.5" y="883.3" font-size="12.0" font-weight="500" fill="#DA6BA2" stroke="#DA6BA2" stroke-width="0.3" stroke-linejoin="round" text-anchor="middle">S 1</text>
 <rect x="23.0" y="549.1" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#0066AD"/>
 <text x="35.0" y="560.8" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 3</text>
 <rect x="50.0" y="549.1" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#992746"/>
@@ -608,6 +636,8 @@
 <text x="403.5" y="740.3" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 5</text>
 <rect x="1384.9" y="1275.7" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#66AA22"/>
 <text x="1396.9" y="1287.4" font-size="12.0" font-weight="500" fill="white" text-anchor="middle">S 8</text>
+<rect x="437.57" y="1225.55" width="23.00" height="14.00" rx="7.00" ry="7.00" fill="white" stroke="#DA6BA2" stroke-width="1.5"/>
+<text x="449.1" y="1236.7" font-size="12.0" font-weight="500" fill="#DA6BA2" stroke="#DA6BA2" stroke-width="0.3" stroke-linejoin="round" text-anchor="middle">S 1</text>
 <g font-size="10">
 <text x="-55.0" y="32.8" font-size="10" font-weight="bold" fill="#111111" text-anchor="start">Linie</text>
 <text x="-15.0" y="32.8" font-size="10" font-weight="bold" fill="#111111" text-anchor="start">Zuggruppe</text>
@@ -771,7 +801,7 @@
 <rect x="-55.0" y="427.4" width="24.0" height="15.0" rx="7.5" ry="7.5" fill="#66AA22"/>
 <text x="-43.0" y="439.1" font-size="12" font-weight="500" fill="white" text-anchor="middle">S 8</text>
 <text x="-15.0" y="438.4" font-size="10" fill="#111111" text-anchor="start">Stammzuggruppe</text>
-<text x="79.9" y="438.4" font-size="10" fill="#111111" text-anchor="start">Wildau &lt;&gt; Hohen Neuendorf</text>
+<text x="79.9" y="438.4" font-size="10" fill="#111111" text-anchor="start">Wildau &lt;&gt; Birkenwerder</text>
 <polygon points="260.0,432.4 271.5,432.4 271.5,437.4 255.5,437.4" fill="#111111"/>
 <polygon points="276.5,432.4 288.0,432.4 288.0,437.4 272.0,437.4" fill="#111111"/>
 <polygon points="293.0,432.4 304.5,432.4 304.5,437.4 288.5,437.4" fill="white" stroke="#111111" stroke-width="1.0"/>
@@ -797,7 +827,7 @@
 <line x1="-20.0" y1="19.9" x2="-20.0" y2="479.9" stroke="#111111" stroke-width="0.8"/>
 <line x1="74.9" y1="19.9" x2="74.9" y2="479.9" stroke="#111111" stroke-width="0.8"/>
 <line x1="250.5" y1="19.9" x2="250.5" y2="479.9" stroke="#111111" stroke-width="0.8"/>
-<text x="-15.0" y="492.8" font-size="9" fill="#111111" text-anchor="start">* Blankenburg &lt;&gt; Hohen Neuendorf</text>
+<text x="-15.0" y="492.8" font-size="9" fill="#111111" text-anchor="start">* Blankenburg &lt;&gt; Birkenwerder</text>
 <polygon points="260.0,486.4 271.5,486.4 271.5,491.4 255.5,491.4" fill="#111111"/>
 <polygon points="276.5,486.4 288.0,486.4 288.0,491.4 272.0,491.4" fill="#111111"/>
 </g>

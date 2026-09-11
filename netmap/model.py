@@ -464,6 +464,31 @@ class StyleConfig:
     badge_height: float = 15.0
     badge_padding: float = 3.0
     badge_gap: float = 3.0
+    # Randstaerke des umrandeten Signets an Zwischenenden (weiss gefuellt,
+    # Rand und Schrift in Linienfarbe). Der Rand liegt innen.
+    badge_outline: float = 1.5
+    # Um so viel ist das umrandete Signet rundum groesser als ein volles --
+    # Schrift und Randstaerke bleiben dabei gleich. Die Mitte bleibt auf der
+    # Hoehe der Reihe; in der Breite nimmt es entsprechend mehr Platz ein,
+    # der Abstand zum Nachbarn bleibt `badge_gap`.
+    badge_outline_grow: float = 0.25
+    # Farbige Schrift auf Weiss wirkt duenner als weisse auf Farbe. Eine
+    # feine Kontur in derselben Farbe gleicht das aus; ein hoeheres
+    # font-weight taete es nicht zuverlaessig, weil nicht jeder Betrachter
+    # dafuer einen eigenen Schnitt findet.
+    badge_outline_text: float = 0.3
+
+    # Richtungspfeile (`Net.direction_arrows`): zwei spitze Dreiecke, eines
+    # in Linienfarbe und darunter ein weisses, in Fahrtrichtung so weit
+    # vorgeschoben, dass an beiden Flanken ein Rand von `arrow_edge` stehen
+    # bleibt. Die Grundseite ist je Seite um `arrow_overhang` breiter als die
+    # Linie, der Winkel an der Spitze `arrow_tip_angle` (Grad). Jeder Pfeil
+    # steht um `arrow_stagger` gegen seine Fahrtrichtung versetzt -- zwei
+    # gegenlaeufige nebeneinander ruecken so auseinander. Pixel.
+    arrow_overhang: float = 2.5
+    arrow_tip_angle: float = 50.0
+    arrow_edge: float = 1.25
+    arrow_stagger: float = 10.0
 
     label_clearance: float = 8.0
     # Hubs und Endstationen tragen ein groesseres Symbol als ein einfacher
@@ -803,6 +828,13 @@ class TrainGroup:
             "Alle Zuggruppen". Freier Text, damit die Tabelle nicht an eine
             feste Aufzaehlung gebunden ist.
     route   Laufweg, ebenfalls wortwoertlich: "Wannsee <> Oranienburg".
+            Die beiden Namen steuern auch die Karte: endet eine Gruppe an
+            einer Station, an der die Linie selbst weiterfaehrt, bekommt
+            diese ein umrandetes Signet. Sie muessen deshalb genau so heissen
+            wie die Station (`Station.name`); ein Laufweg ohne " <> " wie
+            "Ringbahn in beide Richtungen" bleibt ohne Signet. Dazwischen
+            darf ein Durchfahrtspunkt stehen ("Zehlendorf <> Hbf <>
+            Frohnau") -- Endpunkte sind nur der erste und der letzte Name.
     cars    Zugstaerke in Viertelzuegen (1 bis 4) -- so viele Wagenzeichen
             stehen in der letzten Spalte.
     hollow  Wie viele der `cars` nur umrandet statt gefuellt gezeichnet
