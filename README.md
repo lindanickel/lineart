@@ -148,3 +148,16 @@ Zweigleisiger Ausbau:
 - Frohnau – Oranienburg (S1)
 - Wannsee – Potsdam (S7)
 - Wildau – Königs Wusterhausen (S46)
+
+## Lizenz
+
+- Engine (`netmap/`) und Dokumentation: MIT, siehe [`LICENSE`](LICENSE)
+- Netzdefinitionen (`berlin_*.py`) und Karten (`outputs/`): CC BY-SA 4.0,
+  siehe [`LICENSE-CC-BY-SA.md`](LICENSE-CC-BY-SA.md)
+
+Die Karten sind eine Bearbeitung des Netzplans
+[„S-Bahn Berlin - Netzplan.svg“](https://commons.wikimedia.org/wiki/File:S-Bahn_Berlin_-_Netzplan.svg)
+von Arbalete u. a. (Wikimedia Commons), lizenziert unter
+[CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.de). Sie
+werden nicht aus der Vorlage kopiert, sondern mit der Engine neu erzeugt und
+um die Ausbaustufen ergänzt.
