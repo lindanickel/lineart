@@ -28,8 +28,8 @@ Jede Stufe beschreibt nur den Unterschied zur vorherigen und leitet mit
 
 ```
 berlin_2026  →  berlin_2030  →  berlin_2030plus  →  berlin_2040plus
-   Bestand      Siemensbahn      City-S-Bahn BA2      Nahverkehrs-
-                                 S25, Kamenzer Damm   tangente Nord
+Bestand         Siemensbahn     City-S-Bahn BA2     City-S-Bahn BA3a + b
+                                S25-Verlängerung    NVT-Nord
 ```
 
 ## Das aktuelle Berliner S-Bahn-Netz, Stand 2026
@@ -41,7 +41,7 @@ Vektorfassung: [`outputs/berlin_sbahn_2026.svg`](outputs/berlin_sbahn_2026.svg)
 ## Zukünftige Stadien des Berliner S-Bahn-Netzes
 
 Die Maßnahmen sind in drei Stufen sortiert, grob nach den möglichen
-Fertigstellungsdaten.
+Fertigstellungszeitpunkten.
 
 ### Stufe 1 — Ende der 2020er (`berlin_2030.py`)
 
@@ -55,13 +55,13 @@ Fertigstellungsdaten.
 Auf der Siemensbahn fährt die neue Linie S6 von Gartenfeld über den Ring zum
 Hauptbahnhof. Die S5 fährt dank des Ausbaus im 10-Minuten-Takt bis
 Strausberg. Den Spandauer Ast übernimmt die S75 und fährt von Wartenberg
-durch bis Spandau; die S3 endet dafür in Charlottenburg. Neu ist außerdem die
-S86 von Grünau nach Buch, sie fährt auf vorhandener Strecke.
+durch bis Spandau; die S3 endet dafür in Charlottenburg. Neu ist die S86 von
+Grünau nach Buch, entnommen der Planung des LSFB.
 
 Auf der Nordbahn übernimmt die S15 den Laufweg der S85 und fährt vom
-Hauptbahnhof bis Frohnau; die S85 endet dafür am Hauptbahnhof, ihr HVZ-Ast
-nach Pankow entfällt. S6, S15 und S85 enden hier noch am Hauptbahnhof; der
-Tunnel nach Süden kommt erst in Stufe 2.
+Hauptbahnhof bis Frohnau; die S85 endet dafür am Hauptbahnhof, ihr
+abweichender Ast nach Pankow entfällt. S6, S15 und S85 enden am Hauptbahnhof;
+der Tunnel nach Süden kommt erst in Stufe 2.
 
 ![S-Bahn-Netz 2030](outputs/berlin_sbahn_2030.png)
 
@@ -105,9 +105,9 @@ Nord-Süd-Tunnel bis Hennigsdorf.
   Außenring
 
 S6 und S15 fahren vom Potsdamer Platz weiter über Gleisdreieck bis Yorckstraße
-(Großgörschenstraße), die S15 damit nicht mehr über den Anhalter Bahnhof. Die
-S25 nimmt den anderen Ast und fährt von Yorckstraße über Gleisdreieck in den
-neuen Tunnel, ebenfalls nicht mehr über den Anhalter Bahnhof. Die S6 biegt
+(Großgörschenstraße), die S15 fährt damit nicht mehr über den Anhalter Bahnhof.
+Die S25 nimmt den anderen Ast und fährt von Yorckstraße über Gleisdreieck in
+den neuen Tunnel, ebenfalls nicht mehr über den Anhalter Bahnhof. Die S6 biegt
 hinter Julius-Leber-Brücke über die Cheruskerkurve auf den Südring ab und
 fährt von dort bis Königs Wusterhausen; auf der Görlitzer Bahn übernimmt sie
 damit die Funktion der S46. Die S46 fährt deshalb statt nach Königs
