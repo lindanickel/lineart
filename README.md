@@ -65,6 +65,8 @@ der Tunnel nach Süden kommt erst in Stufe 2.
 
 ![S-Bahn-Netz 2030](outputs/berlin_sbahn_2030.png)
 
+Vektorfassung: [`outputs/berlin_sbahn_2030.svg`](outputs/berlin_sbahn_2030.svg)
+
 ### Stufe 2 — 2030er Jahre (`berlin_2030plus.py`)
 
 - Fertigstellung des BA2 der City-S-Bahn: Tunnel von Hbf tief bis Potsdamer
@@ -90,6 +92,8 @@ Kremmener Bahn verlegt und fährt von Stahnsdorf auf dem alten Weg durch den
 Nord-Süd-Tunnel bis Hennigsdorf.
 
 ![S-Bahn-Netz 2030plus](outputs/berlin_sbahn_2030plus.png)
+
+Vektorfassung: [`outputs/berlin_sbahn_2030plus.svg`](outputs/berlin_sbahn_2030plus.svg)
 
 ### Stufe 3 — 2040er Jahre (`berlin_2040plus.py`)
 

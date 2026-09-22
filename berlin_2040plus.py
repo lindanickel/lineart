@@ -884,7 +884,7 @@ NET = VORGAENGER.derive(
     # dort auch keinen Versatz mehr. Julius-Leber-Bruecke steht mit der S6
     # und der gedehnten Kante nach Yorckstrasse anders; dort bleibt der
     # Name auf seiner Standardstelle.
-    label_offsets={"pankow": REMOVE, "julius_leber_bruecke": REMOVE},
+    label_offsets={"julius_leber_bruecke": REMOVE},
     badge_offsets={
         # Das S8-Signet sitzt unter dem Namen, muss dort aber nach rechts
         # ausweichen: unter dem Kreuz laufen S2 und S8 als Paar, dazu die S75

@@ -519,9 +519,6 @@ NET = VORGAENGER.derive(
         # Name auf derselben Grundlinie wie Friedrichstrasse und
         # Alexanderplatz an derselben Stadtbahn.
         "hauptbahnhof": (0.0, 0.0),
-        # Die S85 faengt jetzt in Pankow an -- die Station traegt wieder ein
-        # Tag und damit auch wieder den Versatz aus dem Bestand.
-        "pankow": (7.0, -7.0),
         # Blankenburg umgekehrt: die S26 endet dort nicht mehr, das Tag ist
         # weg, der Name steht wieder ohne Versatz.
         "blankenburg": REMOVE,
