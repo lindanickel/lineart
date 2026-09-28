@@ -153,15 +153,76 @@ Zweigleisiger Ausbau:
 - Wannsee – Potsdam (S7)
 - Wildau – Königs Wusterhausen (S46)
 
+## Topologische Karte 2026
+
+Neben dem schematischen Plan gibt es eine topologische Karte des Netzes
+2026: Die Linien liegen auf den echten S-Bahn-Gleisen aus OpenStreetMap,
+über einer Grundkarte mit Berlin, Gemeindegrenzen, Gewässern, Straßen,
+Bahnstrecken, U-Bahn und Straßenbahn.
+
+![Topologische Karte des Berliner S-Bahn-Netzes 2026](outputs/berlin_sbahn_topologische_karte_2026.png)
+
+Vektorfassung: [`outputs/berlin_sbahn_topologische_karte_2026.svg`](outputs/berlin_sbahn_topologische_karte_2026.svg)
+
+```bash
+python berlin_basemap.py && python berlin_top_2026.py
+```
+
+Dafür gibt es eine eigene Engine, [`topomap/`](topomap/). Sie holt die
+Ebenen über die Overpass-API aus OpenStreetMap, projiziert sie
+transversal-mercatorisch um die Kartenmitte und schreibt SVG und PNG. Die
+Antworten landen in `cache/osm/` (nicht im Repo); nur der erste Lauf braucht
+das Netz.
+
+`berlin_basemap.py` beschreibt die Grundkarte und ihren Ausschnitt.
+`berlin_top_2026.py` legt das Netz aus `berlin_2026.py` darüber:
+
+- **Gleislage:** Parallele Gleise werden zu einem Mittelgleis
+  zusammengefasst, zwischen je zwei Stationen sucht die Engine den Weg
+  darüber. Die Trassen bestehen aus Geraden und Kreisbögen, Abzweige laufen
+  tangential ab.
+- **Linien:** Jede Linie hat ihre eigene Spur, auch S2, S25 und S26. Wo
+  Linien dasselbe Gleis befahren, liegen sie als Bündel nebeneinander, bis
+  sich die Gleise wirklich trennen. Wo eine Linie allein fährt, liegt sie
+  mittig auf ihrem Gleis und schmiegt sich an hinzukommende Linien an.
+  Spurwechsel in Kurven behalten den Radius des Gleises. Die Reihenfolge im
+  Bündel ergibt sich aus der Automatik oder aus Korridoren und
+  Seitenvorgaben von Hand.
+- **Stationen:** Wichtige Stationen und alle Endpunkte bekommen eine Marke,
+  ein Kreis für eine Linie, eine Pille quer über ein Bündel, an
+  Kreuzungsbahnhöfen eine Fläche über beide Bündel. Unter dem Namen stehen
+  die Signets der Linien, die dort enden: voll an Endpunkten, weiß an
+  Zwischenenden, abgeleitet aus den Zuggruppen und den Taktinformationen
+  der S-Bahn Berlin.
+- **Streckennamen:** Die Namen der Bahnstrecken stehen kursiv entlang der
+  Strecke; an der Ringbahn stehen innen die Signets der S41 und S42 mit
+  ihrer Fahrtrichtung.
+
 ## Lizenz
 
-- Engine (`netmap/`) und Dokumentation: MIT, siehe [`LICENSE`](LICENSE)
+- Engines (`netmap/`, `topomap/`) und Dokumentation: MIT, siehe [`LICENSE`](LICENSE)
 - Netzdefinitionen (`berlin_*.py`) und Karten (`outputs/`): CC BY-SA 4.0,
   siehe [`LICENSE-CC-BY-SA.md`](LICENSE-CC-BY-SA.md)
 
-Die Karten sind eine Bearbeitung des Netzplans
+Die schematischen Pläne sind eine Bearbeitung des Netzplans
 [„S-Bahn Berlin - Netzplan.svg“](https://commons.wikimedia.org/wiki/File:S-Bahn_Berlin_-_Netzplan.svg)
 von Arbalete u. a. (Wikimedia Commons), lizenziert unter
 [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/deed.de). Sie
 werden nicht aus der Vorlage kopiert, sondern mit der Engine neu erzeugt und
 um die Ausbaustufen ergänzt.
+
+Die topologische Karte ist eine Bearbeitung des
+[„Topographischen Netzplans der S-Bahn Berlin“](https://commons.wikimedia.org/wiki/File:Topographischer_Netzplan_der_S-Bahn_Berlin.png)
+von Maximilian Dörrbecker (Chumwa), lizenziert unter
+[CC BY-SA 2.0](https://creativecommons.org/licenses/by-sa/2.0/deed.de). Sie
+übernimmt dessen Gestaltung (Linien auf den Gleisen, Stationsmarken,
+Streckennamen), wird aber nicht aus der Vorlage kopiert, sondern mit der
+Engine aus OpenStreetMap-Daten neu erzeugt und auf das Netz 2026
+aktualisiert. Die CC BY-SA 2.0 erlaubt die Weitergabe von Bearbeitungen
+unter einer späteren Version, hier CC BY-SA 4.0.
+
+Die topologische Karte (`berlin_basemap.py`, `berlin_top_2026.py`)
+enthält Daten von
+[OpenStreetMap](https://www.openstreetmap.org/copyright), © OpenStreetMap-Mitwirkende,
+verfügbar unter der
+[ODbL](https://opendatacommons.org/licenses/odbl/).
