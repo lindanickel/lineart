@@ -23,6 +23,12 @@ conda env create -f environment.yml && conda activate lineart
 python berlin_2026.py && python berlin_2030.py && python berlin_2030plus.py && python berlin_2040plus.py
 ```
 
+Die topologische Karte:
+
+```bash
+python berlin_basemap.py && python berlin_top_2026.py
+```
+
 Jede Stufe beschreibt nur den Unterschied zur vorherigen und leitet mit
 `Net.derive()` von ihr ab:
 
@@ -38,6 +44,13 @@ Bestand         Siemensbahn     City-S-Bahn BA2     City-S-Bahn BA3a + b
 
 Vektorfassung: [`outputs/berlin_sbahn_2026.svg`](outputs/berlin_sbahn_2026.svg)
 
+Dasselbe Netz als topologische Karte, mit den Linien auf den echten S-Bahn-
+Gleisen aus OpenStreetMap. Details stehen [weiter unten](#die-topologische-karte)
+
+![Topologische Karte des Berliner S-Bahn-Netzes 2026](outputs/berlin_sbahn_topologische_karte_2026.png)
+
+Vektorfassung: [`outputs/berlin_sbahn_topologische_karte_2026.svg`](outputs/berlin_sbahn_topologische_karte_2026.svg)
+
 ## Zukünftige Stadien des Berliner S-Bahn-Netzes
 
 Die Maßnahmen sind in drei Stufen sortiert, grob nach den möglichen
@@ -48,7 +61,7 @@ Fertigstellungszeitpunkten.
 - Wiederaufbau der Siemensbahn von Jungfernheide nach Gartenfeld mit den
   Stationen Wernerwerk, Siemensstadt und Gartenfeld
 - Neue Station Perleberger Brücke am nördlichen Zulauf zum Hauptbahnhof
-- Fertigstellung der endgültigen Station Hbf tief und Ablösung der
+- Fertigstellung der endgültigen Station Hbf (tief) und Ablösung der
   Interimsstation mit ihrem einen Bahnsteig für Halbzüge
 - Teilweise zweigleisiger Ausbau der Strecke Hoppegarten – Strausberg
 
@@ -61,7 +74,11 @@ Grünau nach Buch, entnommen der Planung des LSFB.
 Auf der Nordbahn übernimmt die S15 den Laufweg der S85 und fährt vom
 Hauptbahnhof bis Frohnau; die S85 endet dafür am Hauptbahnhof, ihr
 abweichender Ast nach Pankow entfällt. S6, S15 und S85 enden am Hauptbahnhof;
-der Tunnel nach Süden kommt erst in Stufe 2.
+der Tunnel nach Süden kommt erst in Stufe 2. Die Verlegung der S85 und die 
+Erweiterung der S15 hängen maßgeblich von der Fertigstellung der finalen
+Station Hbf (tief) ab. Solange sie nicht fertiggestellt ist und die 
+Siemensbahn in Betrieb geht, wird die S15 eingestellt. Eine Fertigstellung 
+der Station ist auch erst mit BA2 möglich.
 
 ![S-Bahn-Netz 2030](outputs/berlin_sbahn_2030.png)
 
@@ -69,7 +86,7 @@ Vektorfassung: [`outputs/berlin_sbahn_2030.svg`](outputs/berlin_sbahn_2030.svg)
 
 ### Stufe 2 — 2030er Jahre (`berlin_2030plus.py`)
 
-- Fertigstellung des BA2 der City-S-Bahn: Tunnel von Hbf tief bis Potsdamer
+- Fertigstellung des BA2 der City-S-Bahn: Tunnel von Hbf (tief) bis Potsdamer
   Platz
 - Verlängerung der Strecke von Teltow Stadt nach Süden mit den Stationen
   Iserstraße und Stahnsdorf
@@ -153,22 +170,9 @@ Zweigleisiger Ausbau:
 - Wannsee – Potsdam (S7)
 - Wildau – Königs Wusterhausen (S46)
 
-## Topologische Karte 2026
+## Die topologische Karte
 
-Neben dem schematischen Plan gibt es eine topologische Karte des Netzes
-2026: Die Linien liegen auf den echten S-Bahn-Gleisen aus OpenStreetMap,
-über einer Grundkarte mit Berlin, Gemeindegrenzen, Gewässern, Straßen,
-Bahnstrecken, U-Bahn und Straßenbahn.
-
-![Topologische Karte des Berliner S-Bahn-Netzes 2026](outputs/berlin_sbahn_topologische_karte_2026.png)
-
-Vektorfassung: [`outputs/berlin_sbahn_topologische_karte_2026.svg`](outputs/berlin_sbahn_topologische_karte_2026.svg)
-
-```bash
-python berlin_basemap.py && python berlin_top_2026.py
-```
-
-Dafür gibt es eine eigene Engine, [`topomap/`](topomap/). Sie holt die
+Für die topologische Karte gibt es eine eigene Engine, [`topomap/`](topomap/). Sie holt die
 Ebenen über die Overpass-API aus OpenStreetMap, projiziert sie
 transversal-mercatorisch um die Kartenmitte und schreibt SVG und PNG. Die
 Antworten landen in `cache/osm/` (nicht im Repo); nur der erste Lauf braucht
